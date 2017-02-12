@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TimeTortoise.UWP")]
+[assembly: AssemblyTitle("TimeTortoise")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TimeTortoise.UWP")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyProduct("TimeTortoise")]
+[assembly: AssemblyCopyright("Copyright © 2017 RedGreenCode")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
