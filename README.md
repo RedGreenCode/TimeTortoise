@@ -11,6 +11,7 @@ For all of the details, see [this series of blog posts](https://www.redgreencode
 Time Tortoise relies on the following technology:
 
 * [Universal Windows Platform (UWP)](https://docs.microsoft.com/en-us/windows/uwp/get-started/whats-a-uwp)
+* [C#](https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx)
 * [.NET Core](https://github.com/dotnet/core) and [.NET Standard](https://github.com/dotnet/standard)
 * [Entity Framework Core](https://github.com/aspnet/EntityFramework)
 * [SQLite](http://sqlite.org/)
