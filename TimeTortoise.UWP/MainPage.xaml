@@ -4,9 +4,26 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:viewModel="using:TimeTortoise.ViewModel"
 	mc:Ignorable="d">
 
 	<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+		<ListView 
+			ItemsSource="{x:Bind Main.Activities, Mode=OneWay}"
+			SelectedIndex="{x:Bind Main.SelectedIndex, Mode=TwoWay}"
+			HorizontalAlignment="Left" Height="207" Margin="134,29,0,0" VerticalAlignment="Top" Width="372">
 
+			<ListView.ItemTemplate>
+				<DataTemplate x:DataType="viewModel:ActivityViewModel">
+					<Grid>
+						<TextBlock Text="{x:Bind Name, Mode=OneWay}" />
+					</Grid>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+
+		</ListView>
+		<TextBox Text="{x:Bind Main.SelectedActivity.Name, Mode=TwoWay}" HorizontalAlignment="Left" Margin="138,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="215"/>
+		<Button Click="{x:Bind Main.Save}" Content="Save" HorizontalAlignment="Left" Margin="138,298,0,0" VerticalAlignment="Top"/>
+		<Button Click="{x:Bind Main.Add}" Content="Add" HorizontalAlignment="Left" Margin="224,298,0,0" VerticalAlignment="Top"/>
 	</Grid>
 </Page>

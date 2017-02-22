@@ -187,7 +187,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\TimeTortoise.ViewModel\TimeTortoise.ViewModel.csproj">
+      <Project>{884c030c-28e2-47c4-bb4e-4e03eb09f2ef}</Project>
+      <Name>TimeTortoise.ViewModel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

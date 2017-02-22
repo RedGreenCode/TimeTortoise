@@ -39,6 +39,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="NotificationBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

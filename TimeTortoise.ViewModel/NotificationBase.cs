@@ -36,18 +36,13 @@ namespace TimeTortoise.ViewModel
 
 	public class NotificationBase<T> : NotificationBase where T : class, new()
 	{
-		protected T This;
+		protected readonly T This;
 
 		public static implicit operator T(NotificationBase<T> thing) { return thing.This; }
 
 		protected NotificationBase(T thing = null)
 		{
 			This = thing ?? new T();
-		}
-
-		protected void SetModel(T model)
-		{
-			This = model;
 		}
 	}
 }

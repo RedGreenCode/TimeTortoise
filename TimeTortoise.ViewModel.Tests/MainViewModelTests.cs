@@ -29,5 +29,19 @@ namespace TimeTortoise.ViewModel.Tests
 			Assert.Equal("TestName1", mvm.Activities[0].Name);
 			Assert.Equal("TestName2", mvm.Activities[1].Name);
 		}
+
+		[Fact]
+		public void SelectedActivity_WhenNoActivitySelected_HasNullName()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			var mvm = new MainViewModel(mockRepository.Object);
+
+			// Act
+			var avm = mvm.SelectedActivity;
+
+			// Assert
+			Assert.Equal(null, avm.Name);
+		}
 	}
 }

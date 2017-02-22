@@ -7,5 +7,6 @@ namespace TimeTortoise.DAL
 	public interface IRepository
 	{
 		List<Activity> LoadActivities();
+		void SaveActivity(Activity activity);
 	}
 }
