@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using TimeTortoise.DAL;
 using TimeTortoise.Model;
 
@@ -27,9 +28,17 @@ namespace TimeTortoise.ViewModel
 			set
 			{
 				SetProperty(ref _selectedIndex, value);
-				if (Activities.Count == 0) Activities.Add(new ActivityViewModel(new Activity()));
-				if (_selectedIndex <= 0) _selectedIndex = 0;
-				SelectedActivity = Activities[_selectedIndex];
+
+				if (_selectedIndex < 0 || _selectedIndex >= Activities.Count)
+				{
+					IsSaveEnabled = false;
+					SelectedActivity = new ActivityViewModel(new Activity());
+				}
+				else
+				{
+					IsSaveEnabled = true;
+					SelectedActivity = Activities[_selectedIndex];
+				}
 			}
 		}
 
@@ -49,13 +58,33 @@ namespace TimeTortoise.ViewModel
 
 		public void Save()
 		{
+			if (_selectedIndex < 0 || _selectedIndex >= Activities.Count)
+			{
+				throw new InvalidOperationException("Tried to save an invalid selection at index " + _selectedIndex);
+			}
 			_repository.SaveActivity(Activities[_selectedIndex]);
+		}
+
+		private bool _isSaveEnabled;
+		public bool IsSaveEnabled
+		{
+			get { return _isSaveEnabled; }
+			private set
+			{
+				SetProperty(ref _isSaveEnabled, value);
+			}
 		}
 
 		public void Add()
 		{
 			Activities.Add(new ActivityViewModel(new Activity()));
 			SelectedIndex = Activities.Count - 1;
+		}
+
+		public void Delete()
+		{
+			Activities.Remove(SelectedActivity);
+			_repository.DeleteActivity(SelectedActivity);
 		}
 	}
 }

@@ -8,5 +8,6 @@ namespace TimeTortoise.DAL
 	{
 		List<Activity> LoadActivities();
 		void SaveActivity(Activity activity);
+		void DeleteActivity(Activity activity);
 	}
 }

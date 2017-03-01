@@ -1,0 +1,56 @@
+{
+  "version": 2,
+  "exports": {
+    "TimeTortoise.DAL/1.0.0": {
+      "type": "project",
+      "framework": ".NETStandard,Version=v1.4",
+      "compile": {
+        "bin/Debug/TimeTortoise.DAL.dll": {}
+      },
+      "runtime": {
+        "bin/Debug/TimeTortoise.DAL.dll": {}
+      },
+      "contentFiles": {
+        "bin/Debug/TimeTortoise.DAL.pdb": {
+          "buildAction": "None",
+          "codeLanguage": "any",
+          "copyToOutput": true
+        }
+      }
+    },
+    "TimeTortoise.ViewModel/1.0.0": {
+      "type": "project",
+      "framework": ".NETStandard,Version=v1.4",
+      "compile": {
+        "bin/Debug/TimeTortoise.ViewModel.dll": {}
+      },
+      "runtime": {
+        "bin/Debug/TimeTortoise.ViewModel.dll": {}
+      },
+      "contentFiles": {
+        "bin/Debug/TimeTortoise.ViewModel.pdb": {
+          "buildAction": "None",
+          "codeLanguage": "any",
+          "copyToOutput": true
+        }
+      }
+    },
+    "TimeTortoise.Model/1.0.0": {
+      "type": "project",
+      "framework": ".NETStandard,Version=v1.4",
+      "compile": {
+        "bin/Debug/TimeTortoise.Model.dll": {}
+      },
+      "runtime": {
+        "bin/Debug/TimeTortoise.Model.dll": {}
+      },
+      "contentFiles": {
+        "bin/Debug/TimeTortoise.Model.pdb": {
+          "buildAction": "None",
+          "codeLanguage": "any",
+          "copyToOutput": true
+        }
+      }
+    }
+  }
+}

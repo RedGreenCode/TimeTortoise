@@ -42,7 +42,7 @@ namespace TimeTortoise.ViewModel
 
 		protected NotificationBase(T thing = null)
 		{
-			This = thing ?? new T();
+			This = thing;
 		}
 	}
 }

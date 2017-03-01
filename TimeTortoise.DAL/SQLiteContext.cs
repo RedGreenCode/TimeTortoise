@@ -9,9 +9,17 @@ namespace TimeTortoise.DAL
 			Database.Migrate();
 		}
 
+		public SqliteContext(DbContextOptions options) : base(options)
+		{
+			Database.Migrate();
+		}
+
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlite("Filename=TimeTortoise.db");
+			if (!optionsBuilder.IsConfigured)
+			{
+				optionsBuilder.UseSqlite("Filename=TimeTortoise.db");
+			}
 		}
 	}
 }

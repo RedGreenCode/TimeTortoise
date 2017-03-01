@@ -22,8 +22,11 @@
 			</ListView.ItemTemplate>
 
 		</ListView>
-		<TextBox Text="{x:Bind Main.SelectedActivity.Name, Mode=TwoWay}" HorizontalAlignment="Left" Margin="138,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="215"/>
-		<Button Click="{x:Bind Main.Save}" Content="Save" HorizontalAlignment="Left" Margin="138,298,0,0" VerticalAlignment="Top"/>
+		<TextBox Text="{x:Bind Main.SelectedActivity.Name, Mode=TwoWay}" HorizontalAlignment="Left" Margin="138,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="232"/>
+		<Button Click="{x:Bind Main.Save}" 
+				Content="Save" 
+				IsEnabled="{x:Bind Main.IsSaveEnabled, Mode=OneWay}"  
+				HorizontalAlignment="Left" Margin="138,298,0,0" VerticalAlignment="Top"/>
 		<Button Click="{x:Bind Main.Add}" Content="Add" HorizontalAlignment="Left" Margin="224,298,0,0" VerticalAlignment="Top"/>
 	</Grid>
 </Page>
