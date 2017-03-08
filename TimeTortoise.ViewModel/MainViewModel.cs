@@ -83,8 +83,24 @@ namespace TimeTortoise.ViewModel
 
 		public void Delete()
 		{
-			Activities.Remove(SelectedActivity);
-			_repository.DeleteActivity(SelectedActivity);
+			var selectedActivity = SelectedActivity;
+			Activities.Remove(selectedActivity);
+			_repository.DeleteActivity(selectedActivity);
+		}
+
+		private string _startStopText = "Start";
+		public string StartStopText
+		{
+			get { return _startStopText; }
+			private set
+			{
+				SetProperty(ref _startStopText, value);
+			}
+		}
+
+		public void StartStop()
+		{
+			StartStopText = _startStopText == "Start" ? "Stop" : "Start";
 		}
 	}
 }

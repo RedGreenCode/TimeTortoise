@@ -28,5 +28,6 @@
 				IsEnabled="{x:Bind Main.IsSaveEnabled, Mode=OneWay}"  
 				HorizontalAlignment="Left" Margin="138,298,0,0" VerticalAlignment="Top"/>
 		<Button Click="{x:Bind Main.Add}" Content="Add" HorizontalAlignment="Left" Margin="224,298,0,0" VerticalAlignment="Top"/>
+		<Button Click="{x:Bind Main.Delete}" Content="Delete" HorizontalAlignment="Left" Margin="307,298,0,0" VerticalAlignment="Top"/>
 	</Grid>
 </Page>

@@ -190,5 +190,62 @@ namespace TimeTortoise.ViewModel.Tests
 			// Assert
 			Assert.Equal(1, mvm.Activities.Count);
 		}
+
+		[Fact]
+		public void ActivityName_WhenDeleted_FiresCorrectEvents()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
+			var mvm = new MainViewModel(mockRepository.Object);
+			// http://stackoverflow.com/a/249042/4803
+			var receivedEvents = new List<string>();
+			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
+			{
+				receivedEvents.Add(e.PropertyName);
+			};
+
+			// Act
+			mvm.Add();
+			mvm.SelectedActivity.Name = "TestName1";
+
+			// Assert
+			Assert.Equal("SelectedIndex", receivedEvents[0]);
+			Assert.Equal("IsSaveEnabled", receivedEvents[1]);
+			Assert.Equal("SelectedActivity", receivedEvents[2]);
+		}
+
+		[Fact]
+		public void StartStopButton_WhenPressed_TogglesButtonText()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
+			var mvm = new MainViewModel(mockRepository.Object);
+
+			// Act
+			mvm.StartStop();
+
+			// Assert
+			Assert.Equal("Stop", mvm.StartStopText);
+			mvm.StartStop();
+			Assert.Equal("Start", mvm.StartStopText);
+		}
+
+		[Fact]
+		public void TimeSegment_WhenStartAndEndAreOneHourApart_HasElapsedTimeOfOneHour()
+		{
+			// Arrange
+			var startTime = new Mock<IDateTime>();
+			startTime.Setup(x => x.Now).Returns(new DateTime(2017, 3, 1, 10, 0, 0));
+			var endTime = new Mock<IDateTime>();
+			endTime.Setup(x => x.Now).Returns(new DateTime(2017, 3, 1, 11, 0, 0));
+
+			// Act
+			var elapsedTime = endTime.Object.Now - startTime.Object.Now;
+
+			// Assert
+			Assert.Equal(1, elapsedTime.Hours);
+		}
 	}
 }

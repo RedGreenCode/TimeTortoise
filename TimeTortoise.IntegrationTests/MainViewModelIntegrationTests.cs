@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System.Collections.Specialized;
+using System.Globalization;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 using TimeTortoise.DAL;
@@ -128,6 +130,12 @@ namespace TimeTortoise.IntegrationTests
 					mvm.Save();
 					mvm.LoadActivities();
 
+					// Simulate the behavior of the ListView
+					mvm.Activities.CollectionChanged += delegate (object sender, NotifyCollectionChangedEventArgs e)
+					{
+						if (e.Action == NotifyCollectionChangedAction.Remove) mvm.SelectedIndex = -1;
+					};
+
 					// Act
 					mvm.SelectedIndex = 0;
 					mvm.Delete();
@@ -141,6 +149,16 @@ namespace TimeTortoise.IntegrationTests
 			{
 				connection.Close();
 			}
+		}
+
+		[Fact]
+		public void SystemDateTime_ReturnsCurrentDateTime()
+		{
+			// Arrange
+			var sdt = new Model.SystemDateTime();
+
+			// Assert
+			Assert.Equal(System.DateTime.Now.ToString(CultureInfo.InvariantCulture), sdt.Now.ToString(CultureInfo.InvariantCulture));
 		}
 	}
 }
