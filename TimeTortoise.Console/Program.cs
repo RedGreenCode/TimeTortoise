@@ -17,7 +17,7 @@ namespace TimeTortoise.Console
 		{
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
-			var mvm = new MainViewModel(mockRepository.Object);
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime());
 			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
 			{
 				System.Console.WriteLine($"Received event for property {e.PropertyName}");
@@ -30,7 +30,7 @@ namespace TimeTortoise.Console
 		{
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
-			var mvm = new MainViewModel(mockRepository.Object);
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime());
 			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
 			{
 				System.Console.WriteLine($"Received property changed event for property {e.PropertyName}");

@@ -8,14 +8,16 @@ namespace TimeTortoise.ViewModel
 	public class MainViewModel : NotificationBase
 	{
 		private readonly IRepository _repository;
+		private readonly IDateTime _dateTime;
 
-		public MainViewModel() : this(new Repository(new SqliteContext()))
+		public MainViewModel() : this(new Repository(new SqliteContext()), new SystemDateTime())
 		{
 		}
 
-		public MainViewModel(IRepository repository)
+		public MainViewModel(IRepository repository, IDateTime dateTime)
 		{
 			_repository = repository;
+			_dateTime = dateTime;
 			LoadActivities();
 		}
 
@@ -53,7 +55,15 @@ namespace TimeTortoise.ViewModel
 		{
 			var activities = _repository.LoadActivities();
 			Activities = new ObservableCollection<ActivityViewModel>();
-			foreach (var activity in activities) Activities.Add(new ActivityViewModel(activity));
+			foreach (var activity in activities)
+			{
+				var avm = new ActivityViewModel(activity);
+				foreach (var ts in activity.TimeSegments)
+				{
+					avm.TimeSegments.Add(ts);
+				}
+				Activities.Add(avm);
+			}
 		}
 
 		public void Save()
@@ -98,9 +108,22 @@ namespace TimeTortoise.ViewModel
 			}
 		}
 
+		private bool _isStarted = false;
+		private TimeSegment _currentTimeSegment;
 		public void StartStop()
 		{
-			StartStopText = _startStopText == "Start" ? "Stop" : "Start";
+			_isStarted = !_isStarted;
+			StartStopText = _isStarted ? "Stop" : "Start";
+			if (_isStarted)
+			{
+				_currentTimeSegment = new TimeSegment {StartTime = new DateTime(_dateTime.Now.Ticks)};
+				SelectedActivity.TimeSegments.Add(_currentTimeSegment);
+				SelectedActivity.AddTimeSegment(_currentTimeSegment);
+			}
+			else
+			{
+				_currentTimeSegment.EndTime = new DateTime(_dateTime.Now.Ticks);
+			}
 		}
 	}
 }

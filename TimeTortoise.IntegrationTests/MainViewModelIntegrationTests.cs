@@ -1,9 +1,11 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.Globalization;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-
+using Moq;
 using TimeTortoise.DAL;
+using TimeTortoise.Model;
 using TimeTortoise.ViewModel;
 
 using Xunit;
@@ -38,7 +40,7 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context));
+					var mvm = new MainViewModel(new Repository(context), new SystemDateTime());
 
 					// Act
 					var avm = mvm.SelectedActivity;
@@ -62,7 +64,7 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context));
+					var mvm = new MainViewModel(new Repository(context), new SystemDateTime());
 
 					// Act
 					mvm.LoadActivities();
@@ -99,7 +101,7 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context));
+					var mvm = new MainViewModel(new Repository(context), new SystemDateTime());
 
 					// Act
 					mvm.Add();
@@ -125,7 +127,7 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context));
+					var mvm = new MainViewModel(new Repository(context), new SystemDateTime());
 					mvm.Add();
 					mvm.Save();
 					mvm.LoadActivities();
@@ -155,10 +157,44 @@ namespace TimeTortoise.IntegrationTests
 		public void SystemDateTime_ReturnsCurrentDateTime()
 		{
 			// Arrange
-			var sdt = new Model.SystemDateTime();
+			var sdt = new SystemDateTime();
 
 			// Assert
 			Assert.Equal(System.DateTime.Now.ToString(CultureInfo.InvariantCulture), sdt.Now.ToString(CultureInfo.InvariantCulture));
+		}
+
+		[Fact]
+		public void TimeSegment_WhenSaved_HasCorrectStartAndEndTimes()
+		{
+			var connection = GetConnection();
+			try
+			{
+				using (var context = GetContext(connection))
+				{
+					// Arrange
+					var mockTime = new Mock<IDateTime>();
+					var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
+					mockTime.Setup(x => x.Now).Returns(startTime);
+					var mvm = new MainViewModel(new Repository(context), mockTime.Object);
+
+					// Act
+					mvm.Add();
+					mvm.StartStop();
+					var endTime = new DateTime(2017, 3, 1, 11, 0, 0);
+					mockTime.Setup(x => x.Now).Returns(endTime);
+					mvm.StartStop();
+					mvm.Save();
+					mvm.LoadActivities();
+
+					// Assert
+					Assert.Equal(startTime, mvm.Activities[0].TimeSegments[0].StartTime);
+					Assert.Equal(endTime, mvm.Activities[0].TimeSegments[0].EndTime);
+				}
+			}
+			finally
+			{
+				connection.Close();
+			}
 		}
 	}
 }

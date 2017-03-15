@@ -32,6 +32,12 @@
           "buildAction": "None",
           "codeLanguage": "any",
           "copyToOutput": true
+        },
+        "bin/Debug/sqlite3.dll": {
+          "buildAction": "Content",
+          "codeLanguage": "any",
+          "copyToOutput": true,
+          "outputPath": "sqlite3.dll"
         }
       }
     },

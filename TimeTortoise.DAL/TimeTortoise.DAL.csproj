@@ -43,6 +43,10 @@
     <Compile Include="Migrations\20170217170224_FirstMigration.designer.cs">
       <DependentUpon>20170217170224_FirstMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20170314043939_TimeSegments.cs" />
+    <Compile Include="Migrations\20170314043939_TimeSegments.designer.cs">
+      <DependentUpon>20170314043939_TimeSegments.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\SqliteContextModelSnapshot.cs" />
     <Compile Include="SqliteContext.cs" />
     <Compile Include="Context.cs" />
@@ -55,6 +59,11 @@
       <Project>{5bca1bb8-9d17-4482-ae99-d1b5fb2c12be}</Project>
       <Name>TimeTortoise.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sqlite3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -7,6 +7,8 @@ namespace TimeTortoise.DAL
 	{
 		internal DbSet<Activity> Activities { get; set; }
 
+		internal DbSet<TimeSegment> TimeSegments { get; set; }
+
 		protected Context()
 		{
 			

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using TimeTortoise.Model;
 
 namespace TimeTortoise.DAL
@@ -15,7 +16,7 @@ namespace TimeTortoise.DAL
 
 		public List<Activity> LoadActivities()
 		{
-			return _context.Activities.ToList();
+			return _context.Activities.Include(a => a.TimeSegments).ToList();
 		}
 
 		public void SaveActivity(Activity activity)
