@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using TimeTortoise.Model;
 
 namespace TimeTortoise.ViewModel
@@ -16,7 +15,7 @@ namespace TimeTortoise.ViewModel
 			set { SetProperty(This.Name, value, () => This.Name = value); }
 		}
 
-		public ObservableCollection<TimeSegment> TimeSegments = new ObservableCollection<TimeSegment>();
+		public readonly ObservableCollection<TimeSegment> TimeSegments = new ObservableCollection<TimeSegment>();
 
 		internal void AddTimeSegment(TimeSegment ts)
 		{

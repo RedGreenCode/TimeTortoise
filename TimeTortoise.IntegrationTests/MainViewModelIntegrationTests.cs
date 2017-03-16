@@ -160,7 +160,7 @@ namespace TimeTortoise.IntegrationTests
 			var sdt = new SystemDateTime();
 
 			// Assert
-			Assert.Equal(System.DateTime.Now.ToString(CultureInfo.InvariantCulture), sdt.Now.ToString(CultureInfo.InvariantCulture));
+			Assert.Equal(DateTime.Now.ToString(CultureInfo.InvariantCulture), sdt.Now.ToString(CultureInfo.InvariantCulture));
 		}
 
 		[Fact]

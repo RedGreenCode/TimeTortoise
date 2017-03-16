@@ -113,10 +113,7 @@ namespace TimeTortoise.ViewModel.Tests
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime());
-
-			// Act
-			mvm.SelectedIndex = -1;
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime()) {SelectedIndex = -1};
 
 			// Assert
 			Assert.Equal(false, mvm.IsSaveEnabled);

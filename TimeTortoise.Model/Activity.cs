@@ -11,6 +11,6 @@ namespace TimeTortoise.Model
 
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public List<TimeSegment> TimeSegments { get; set; }
+		public List<TimeSegment> TimeSegments { get; }
 	}
 }

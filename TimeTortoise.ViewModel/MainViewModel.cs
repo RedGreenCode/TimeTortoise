@@ -108,7 +108,7 @@ namespace TimeTortoise.ViewModel
 			}
 		}
 
-		private bool _isStarted = false;
+		private bool _isStarted;
 		private TimeSegment _currentTimeSegment;
 		public void StartStop()
 		{
