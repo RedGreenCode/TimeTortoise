@@ -4,8 +4,11 @@ namespace TimeTortoise.DAL
 {
 	public sealed class SqliteContext : Context
 	{
-		public SqliteContext()
+		private readonly string _localPath;
+
+		public SqliteContext(string localPath)
 		{
+			_localPath = localPath;
 			Database.Migrate();
 		}
 
@@ -18,7 +21,7 @@ namespace TimeTortoise.DAL
 		{
 			if (!optionsBuilder.IsConfigured)
 			{
-				optionsBuilder.UseSqlite("Filename=TimeTortoise.db");
+				optionsBuilder.UseSqlite($@"Filename={_localPath}\TimeTortoise.db");
 			}
 		}
 	}

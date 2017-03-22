@@ -113,7 +113,7 @@ namespace TimeTortoise.ViewModel.Tests
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime()) {SelectedIndex = -1};
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime()) { SelectedIndex = -1 };
 
 			// Assert
 			Assert.Equal(false, mvm.IsSaveEnabled);
@@ -125,7 +125,7 @@ namespace TimeTortoise.ViewModel.Tests
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime()) {SelectedIndex = 1};
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime()) { SelectedIndex = 1 };
 
 			// Assert
 			Assert.Equal(false, mvm.IsSaveEnabled);
@@ -152,7 +152,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime());
 			// http://stackoverflow.com/a/249042/4803
 			var receivedEvents = new List<string>();
-			mvm.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e)
+			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
 			{
 				receivedEvents.Add(e.PropertyName);
 			};

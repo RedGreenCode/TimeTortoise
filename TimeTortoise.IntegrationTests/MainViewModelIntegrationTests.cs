@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.IO;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -83,7 +84,7 @@ namespace TimeTortoise.IntegrationTests
 		public void ActivitiesList_WithEmptyDatabaseOnDisk_IsEmpty()
 		{
 			// Arrange
-			var mvm = new MainViewModel();
+			var mvm = new MainViewModel(Path.GetTempPath());
 
 			// Act
 			mvm.LoadActivities();

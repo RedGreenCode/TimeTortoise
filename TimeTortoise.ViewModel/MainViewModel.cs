@@ -10,7 +10,7 @@ namespace TimeTortoise.ViewModel
 		private readonly IRepository _repository;
 		private readonly IDateTime _dateTime;
 
-		public MainViewModel() : this(new Repository(new SqliteContext()), new SystemDateTime())
+		public MainViewModel(string localPath) : this(new Repository(new SqliteContext(localPath)), new SystemDateTime())
 		{
 		}
 

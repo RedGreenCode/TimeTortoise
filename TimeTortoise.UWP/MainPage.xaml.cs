@@ -7,7 +7,7 @@ namespace TimeTortoise.UWP
 		public MainPage()
 		{
 			InitializeComponent();
-			Main = new MainViewModel();
+			Main = new MainViewModel(Windows.Storage.ApplicationData.Current.LocalFolder.Path);
 		}
 
 		public MainViewModel Main { get; set; }
