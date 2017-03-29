@@ -22,12 +22,34 @@
 			</ListView.ItemTemplate>
 
 		</ListView>
-		<TextBox Text="{x:Bind Main.SelectedActivity.Name, Mode=TwoWay}" HorizontalAlignment="Left" Margin="138,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="232"/>
+		<ListView 
+			ItemsSource="{x:Bind Main.SelectedActivity.TimeSegments, Mode=OneWay}"
+			HorizontalAlignment="Left" Height="207" Margin="555,29,0,0" VerticalAlignment="Top" Width="468">
+
+			<ListView.ItemTemplate>
+				<DataTemplate x:DataType="viewModel:TimeSegmentViewModel">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" MinWidth="200" />
+							<ColumnDefinition Width="Auto" MinWidth="200" />
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Text="{x:Bind StartTime}" />
+						<TextBlock Grid.Column="1" Text="{x:Bind EndTime}" />
+					</Grid>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+
+		</ListView>
+		<TextBox Text="{x:Bind Main.SelectedActivity.Name, Mode=TwoWay}" HorizontalAlignment="Left" Margin="138,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="282"/>
 		<Button Click="{x:Bind Main.Save}" 
 				Content="Save" 
 				IsEnabled="{x:Bind Main.IsSaveEnabled, Mode=OneWay}"  
 				HorizontalAlignment="Left" Margin="138,298,0,0" VerticalAlignment="Top"/>
 		<Button Click="{x:Bind Main.Add}" Content="Add" HorizontalAlignment="Left" Margin="224,298,0,0" VerticalAlignment="Top"/>
 		<Button Click="{x:Bind Main.Delete}" Content="Delete" HorizontalAlignment="Left" Margin="307,298,0,0" VerticalAlignment="Top"/>
+		<Button Click="{x:Bind Main.StartStop}"
+				Content="{x:Bind Main.StartStopText, Mode=OneWay}"
+				IsEnabled="{x:Bind Main.IsSaveEnabled, Mode=OneWay}"  
+				HorizontalAlignment="Left" Margin="441,251,0,0" VerticalAlignment="Top"/>
 	</Grid>
 </Page>

@@ -188,8 +188,8 @@ namespace TimeTortoise.IntegrationTests
 					mvm.LoadActivities();
 
 					// Assert
-					Assert.Equal(startTime, mvm.Activities[0].TimeSegments[0].StartTime);
-					Assert.Equal(endTime, mvm.Activities[0].TimeSegments[0].EndTime);
+					Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.Activities[0].TimeSegments[0].StartTime);
+					Assert.Equal(endTime.ToString(CultureInfo.CurrentUICulture), mvm.Activities[0].TimeSegments[0].EndTime);
 				}
 			}
 			finally

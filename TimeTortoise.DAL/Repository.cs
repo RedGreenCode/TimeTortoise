@@ -19,10 +19,13 @@ namespace TimeTortoise.DAL
 			return _context.Activities.Include(a => a.TimeSegments).ToList();
 		}
 
-		public void SaveActivity(Activity activity)
+		public void AddActivity(Activity activity)
 		{
-			if (activity.Id == 0) _context.Add(activity);
+			_context.Add(activity);
+		}
 
+		public void SaveActivity()
+		{
 			_context.SaveChanges();
 		}
 

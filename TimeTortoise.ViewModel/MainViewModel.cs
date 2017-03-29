@@ -60,7 +60,7 @@ namespace TimeTortoise.ViewModel
 				var avm = new ActivityViewModel(activity);
 				foreach (var ts in activity.TimeSegments)
 				{
-					avm.TimeSegments.Add(ts);
+					avm.TimeSegments.Add(new TimeSegmentViewModel(ts));
 				}
 				Activities.Add(avm);
 			}
@@ -68,11 +68,7 @@ namespace TimeTortoise.ViewModel
 
 		public void Save()
 		{
-			if (_selectedIndex < 0 || _selectedIndex >= Activities.Count)
-			{
-				throw new InvalidOperationException("Tried to save an invalid selection at index " + _selectedIndex);
-			}
-			_repository.SaveActivity(Activities[_selectedIndex]);
+			_repository.SaveActivity();
 		}
 
 		private bool _isSaveEnabled;
@@ -87,7 +83,9 @@ namespace TimeTortoise.ViewModel
 
 		public void Add()
 		{
-			Activities.Add(new ActivityViewModel(new Activity()));
+			var activity = new Activity();
+			Activities.Add(new ActivityViewModel(activity));
+			_repository.AddActivity(activity);
 			SelectedIndex = Activities.Count - 1;
 		}
 
@@ -112,17 +110,22 @@ namespace TimeTortoise.ViewModel
 		private TimeSegment _currentTimeSegment;
 		public void StartStop()
 		{
+			if (_selectedIndex < 0 || _selectedIndex >= Activities.Count)
+				throw new InvalidOperationException("Can't start timing without a selected activity");
+
 			_isStarted = !_isStarted;
 			StartStopText = _isStarted ? "Stop" : "Start";
 			if (_isStarted)
 			{
 				_currentTimeSegment = new TimeSegment {StartTime = new DateTime(_dateTime.Now.Ticks)};
-				SelectedActivity.TimeSegments.Add(_currentTimeSegment);
+				SelectedActivity.TimeSegments.Add(new TimeSegmentViewModel(_currentTimeSegment));
 				SelectedActivity.AddTimeSegment(_currentTimeSegment);
 			}
 			else
 			{
 				_currentTimeSegment.EndTime = new DateTime(_dateTime.Now.Ticks);
+				SelectedActivity.TimeSegments[SelectedActivity.TimeSegments.Count-1] = new TimeSegmentViewModel(_currentTimeSegment);
+				_repository.SaveActivity();
 			}
 		}
 	}

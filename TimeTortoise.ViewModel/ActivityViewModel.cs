@@ -15,7 +15,7 @@ namespace TimeTortoise.ViewModel
 			set { SetProperty(This.Name, value, () => This.Name = value); }
 		}
 
-		public readonly ObservableCollection<TimeSegment> TimeSegments = new ObservableCollection<TimeSegment>();
+		public readonly ObservableCollection<TimeSegmentViewModel> TimeSegments = new ObservableCollection<TimeSegmentViewModel>();
 
 		internal void AddTimeSegment(TimeSegment ts)
 		{

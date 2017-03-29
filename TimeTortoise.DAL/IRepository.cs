@@ -7,7 +7,8 @@ namespace TimeTortoise.DAL
 	public interface IRepository
 	{
 		List<Activity> LoadActivities();
-		void SaveActivity(Activity activity);
+		void AddActivity(Activity activity);
+		void SaveActivity();
 		void DeleteActivity(Activity activity);
 	}
 }

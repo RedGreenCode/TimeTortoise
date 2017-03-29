@@ -43,6 +43,7 @@
     <Compile Include="MainViewModel.cs" />
     <Compile Include="NotificationBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeSegmentViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TimeTortoise.DAL\TimeTortoise.DAL.csproj">
