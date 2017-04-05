@@ -17,12 +17,12 @@ namespace TimeTortoise.Console
 		{
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
 			{
 				System.Console.WriteLine($"Received event for property {e.PropertyName}");
 			};
-			mvm.Add();
+			mvm.AddActivity();
 			mvm.SelectedActivity.Name = "TestName1";
 		}
 
@@ -30,7 +30,7 @@ namespace TimeTortoise.Console
 		{
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
 			{
 				System.Console.WriteLine($"Received property changed event for property {e.PropertyName}");
@@ -40,13 +40,13 @@ namespace TimeTortoise.Console
 				System.Console.WriteLine($"Received collection changed event for action {e.Action}");
 			};
 			System.Console.WriteLine("Add");
-			mvm.Add();
+			mvm.AddActivity();
 			System.Console.WriteLine("Add");
-			mvm.Add();
+			mvm.AddActivity();
 			System.Console.WriteLine("Select");
-			mvm.SelectedIndex = 1;
+			mvm.SelectedActivityIndex = 1;
 			System.Console.WriteLine("Delete");
-			mvm.Delete();
+			mvm.DeleteActivity();
 		}
 
 		public static void Main(string[] args)

@@ -9,29 +9,32 @@ namespace TimeTortoise.ViewModel
 	{
 		private readonly IRepository _repository;
 		private readonly IDateTime _dateTime;
+		private readonly ValidationMessageViewModel _validationMessageViewModel;
 
-		public MainViewModel(string localPath) : this(new Repository(new SqliteContext(localPath)), new SystemDateTime())
+		public MainViewModel(string localPath, ValidationMessageViewModel validationMessageViewModel) : this(new Repository(new SqliteContext(localPath)), new SystemDateTime(), validationMessageViewModel)
 		{
 		}
 
-		public MainViewModel(IRepository repository, IDateTime dateTime)
+		public MainViewModel(IRepository repository, IDateTime dateTime, ValidationMessageViewModel validationMessageViewModel)
 		{
 			_repository = repository;
 			_dateTime = dateTime;
+			_validationMessageViewModel = validationMessageViewModel;
+			_selectedTimeSegment = new TimeSegmentViewModel(new TimeSegment(), _validationMessageViewModel);
 			LoadActivities();
 		}
 
 		public ObservableCollection<ActivityViewModel> Activities { get; private set; } = new ObservableCollection<ActivityViewModel>();
 
-		private int _selectedIndex = -1;
-		public int SelectedIndex
+		private int _selectedActivityIndex = -1;
+		public int SelectedActivityIndex
 		{
-			get { return _selectedIndex; }
+			get { return _selectedActivityIndex; }
 			set
 			{
-				SetProperty(ref _selectedIndex, value);
+				SetProperty(ref _selectedActivityIndex, value);
 
-				if (_selectedIndex < 0 || _selectedIndex >= Activities.Count)
+				if (_selectedActivityIndex < 0 || _selectedActivityIndex >= Activities.Count)
 				{
 					IsSaveEnabled = false;
 					SelectedActivity = new ActivityViewModel(new Activity());
@@ -39,7 +42,7 @@ namespace TimeTortoise.ViewModel
 				else
 				{
 					IsSaveEnabled = true;
-					SelectedActivity = Activities[_selectedIndex];
+					SelectedActivity = Activities[_selectedActivityIndex];
 				}
 			}
 		}
@@ -60,7 +63,7 @@ namespace TimeTortoise.ViewModel
 				var avm = new ActivityViewModel(activity);
 				foreach (var ts in activity.TimeSegments)
 				{
-					avm.TimeSegments.Add(new TimeSegmentViewModel(ts));
+					avm.TimeSegments.Add(new TimeSegmentViewModel(ts, _validationMessageViewModel));
 				}
 				Activities.Add(avm);
 			}
@@ -81,15 +84,15 @@ namespace TimeTortoise.ViewModel
 			}
 		}
 
-		public void Add()
+		public void AddActivity()
 		{
 			var activity = new Activity();
 			Activities.Add(new ActivityViewModel(activity));
 			_repository.AddActivity(activity);
-			SelectedIndex = Activities.Count - 1;
+			SelectedActivityIndex = Activities.Count - 1;
 		}
 
-		public void Delete()
+		public void DeleteActivity()
 		{
 			var selectedActivity = SelectedActivity;
 			Activities.Remove(selectedActivity);
@@ -110,7 +113,7 @@ namespace TimeTortoise.ViewModel
 		private TimeSegment _currentTimeSegment;
 		public void StartStop()
 		{
-			if (_selectedIndex < 0 || _selectedIndex >= Activities.Count)
+			if (_selectedActivityIndex < 0 || _selectedActivityIndex >= Activities.Count)
 				throw new InvalidOperationException("Can't start timing without a selected activity");
 
 			_isStarted = !_isStarted;
@@ -118,15 +121,50 @@ namespace TimeTortoise.ViewModel
 			if (_isStarted)
 			{
 				_currentTimeSegment = new TimeSegment {StartTime = new DateTime(_dateTime.Now.Ticks)};
-				SelectedActivity.TimeSegments.Add(new TimeSegmentViewModel(_currentTimeSegment));
+				SelectedActivity.TimeSegments.Add(new TimeSegmentViewModel(_currentTimeSegment, _validationMessageViewModel));
 				SelectedActivity.AddTimeSegment(_currentTimeSegment);
 			}
 			else
 			{
 				_currentTimeSegment.EndTime = new DateTime(_dateTime.Now.Ticks);
-				SelectedActivity.TimeSegments[SelectedActivity.TimeSegments.Count-1] = new TimeSegmentViewModel(_currentTimeSegment);
+				SelectedActivity.TimeSegments[SelectedActivity.TimeSegments.Count-1] = new TimeSegmentViewModel(_currentTimeSegment, _validationMessageViewModel);
 				_repository.SaveActivity();
 			}
+		}
+
+		private int _selectedTimeSegmentIndex = -1;
+		public int SelectedTimeSegmentIndex
+		{
+			get { return _selectedTimeSegmentIndex; }
+			set
+			{
+				SetProperty(ref _selectedTimeSegmentIndex, value);
+
+				if (_selectedTimeSegmentIndex < 0 || _selectedTimeSegmentIndex >= Activities.Count)
+				{
+					IsSaveEnabled = false;
+					SelectedTimeSegment = new TimeSegmentViewModel(new TimeSegment(), _validationMessageViewModel);
+				}
+				else
+				{
+					IsSaveEnabled = true;
+					SelectedTimeSegment = SelectedActivity.TimeSegments[_selectedTimeSegmentIndex];
+				}
+			}
+		}
+
+		private TimeSegmentViewModel _selectedTimeSegment;
+		public TimeSegmentViewModel SelectedTimeSegment
+		{
+			get { return _selectedTimeSegment; }
+			private set { SetProperty(ref _selectedTimeSegment, value); }
+		}
+
+		public void DeleteTimeSegment()
+		{
+			var selectedTimeSegment = SelectedTimeSegment;
+			SelectedActivity.TimeSegments.Remove(selectedTimeSegment);
+			_repository.SaveActivity();
 		}
 	}
 }

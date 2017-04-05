@@ -7,9 +7,11 @@ namespace TimeTortoise.UWP
 		public MainPage()
 		{
 			InitializeComponent();
-			Main = new MainViewModel(Windows.Storage.ApplicationData.Current.LocalFolder.Path);
+			ValidationMessage = new ValidationMessageViewModel();
+			Main = new MainViewModel(Windows.Storage.ApplicationData.Current.LocalFolder.Path, ValidationMessage);
 		}
 
 		public MainViewModel Main { get; set; }
+		public ValidationMessageViewModel ValidationMessage { get; set; }
 	}
 }

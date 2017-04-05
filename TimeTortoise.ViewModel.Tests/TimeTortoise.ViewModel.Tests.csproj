@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="MainViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeSegmentViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TimeTortoise.DAL\TimeTortoise.DAL.csproj">

@@ -41,7 +41,7 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime());
+					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel());
 
 					// Act
 					var avm = mvm.SelectedActivity;
@@ -65,7 +65,7 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime());
+					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel());
 
 					// Act
 					mvm.LoadActivities();
@@ -84,7 +84,7 @@ namespace TimeTortoise.IntegrationTests
 		public void ActivitiesList_WithEmptyDatabaseOnDisk_IsEmpty()
 		{
 			// Arrange
-			var mvm = new MainViewModel(Path.GetTempPath());
+			var mvm = new MainViewModel(Path.GetTempPath(), new ValidationMessageViewModel());
 
 			// Act
 			mvm.LoadActivities();
@@ -102,10 +102,10 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime());
+					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel());
 
 					// Act
-					mvm.Add();
+					mvm.AddActivity();
 					mvm.Save();
 					mvm.LoadActivities();
 
@@ -128,20 +128,20 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime());
-					mvm.Add();
+					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel());
+					mvm.AddActivity();
 					mvm.Save();
 					mvm.LoadActivities();
 
 					// Simulate the behavior of the ListView
 					mvm.Activities.CollectionChanged += delegate (object sender, NotifyCollectionChangedEventArgs e)
 					{
-						if (e.Action == NotifyCollectionChangedAction.Remove) mvm.SelectedIndex = -1;
+						if (e.Action == NotifyCollectionChangedAction.Remove) mvm.SelectedActivityIndex = -1;
 					};
 
 					// Act
-					mvm.SelectedIndex = 0;
-					mvm.Delete();
+					mvm.SelectedActivityIndex = 0;
+					mvm.DeleteActivity();
 					mvm.LoadActivities();
 
 					// Assert
@@ -176,10 +176,10 @@ namespace TimeTortoise.IntegrationTests
 					var mockTime = new Mock<IDateTime>();
 					var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
 					mockTime.Setup(x => x.Now).Returns(startTime);
-					var mvm = new MainViewModel(new Repository(context), mockTime.Object);
+					var mvm = new MainViewModel(new Repository(context), mockTime.Object, new ValidationMessageViewModel());
 
 					// Act
-					mvm.Add();
+					mvm.AddActivity();
 					mvm.StartStop();
 					var endTime = new DateTime(2017, 3, 1, 11, 0, 0);
 					mockTime.Setup(x => x.Now).Returns(endTime);
