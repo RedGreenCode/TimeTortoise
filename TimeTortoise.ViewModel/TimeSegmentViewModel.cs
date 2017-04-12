@@ -6,16 +6,28 @@ namespace TimeTortoise.ViewModel
 {
 	public class TimeSegmentViewModel : NotificationBase<TimeSegment>
 	{
-		private ValidationMessageViewModel _validationMessageViewModel;
-
+		private readonly ValidationMessageViewModel _validationMessageViewModel;
+		private readonly TimeSegment _timeSegment;
+		
 		public TimeSegmentViewModel(TimeSegment timeSegment, ValidationMessageViewModel validationMessageViewModel) : base(timeSegment)
 		{
 			_validationMessageViewModel = validationMessageViewModel;
+			_timeSegment = timeSegment;
+		}
+
+		public TimeSegment TimeSegment
+		{
+			get { return _timeSegment; }
 		}
 
 		public string StartTime
 		{
-			get { return This.StartTime.ToString(CultureInfo.CurrentUICulture); }
+			get
+			{
+				return This.StartTime == DateTime.MinValue
+					? string.Empty
+					: This.StartTime.ToString(CultureInfo.CurrentUICulture);
+			}
 			set
 			{
 				_validationMessageViewModel.SetFieldValid();

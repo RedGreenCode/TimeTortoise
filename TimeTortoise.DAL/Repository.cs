@@ -34,5 +34,11 @@ namespace TimeTortoise.DAL
 			_context.Remove(activity);
 			_context.SaveChanges();
 		}
+
+		public void DeleteTimeSegment(TimeSegment ts)
+		{
+			_context.Remove(ts);
+			_context.SaveChanges();
+		}
 	}
 }

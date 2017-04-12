@@ -11,7 +11,7 @@ namespace TimeTortoise.ViewModel.Tests
 {
 	public class MainViewModelTests
 	{
-		private static List<Activity> GetActivities()
+		public static List<Activity> GetActivities()
 		{
 			var timeSegment1 = new TimeSegment
 			{
@@ -51,8 +51,24 @@ namespace TimeTortoise.ViewModel.Tests
 			Assert.Equal(3, mvm.Activities.Count);
 			Assert.Equal("Activity1", mvm.Activities[0].Name);
 			Assert.Equal("Activity2", mvm.Activities[1].Name);
-			Assert.Equal("3", mvm.Activities[1].TimeSegments[1].StartTime.ToString().Substring(0, 1));
+			Assert.Equal("3", mvm.Activities[1].GetTimeSegment(1).StartTime.Substring(0, 1));
 			Assert.Equal("Activity3", mvm.Activities[2].Name);
+		}
+
+		[Fact]
+		public void MainViewModel_WhenActivitiesAreLoaded_ContainsTimeSegments()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+
+			// Act
+			mvm.LoadActivities();
+			mvm.SelectedActivityIndex = 1;
+
+			// Assert
+			Assert.Equal(mvm.SelectedActivity.NumObservableTimeSegments, 2);
 		}
 
 		[Fact]
@@ -71,7 +87,7 @@ namespace TimeTortoise.ViewModel.Tests
 		}
 
 		[Fact]
-		public void SelectedTimeSegment_WhenNoTimeSegmentIsSelected_HasMinStartTime()
+		public void SelectedTimeSegment_WhenNoTimeSegmentIsSelected_HasEmptyStartAndEndTimes()
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
@@ -82,8 +98,8 @@ namespace TimeTortoise.ViewModel.Tests
 			var tvm = mvm.SelectedTimeSegment;
 
 			// Assert
-			var mv = DateTime.MinValue;
-			Assert.Equal(mv.ToString(CultureInfo.CurrentUICulture), tvm.StartTime);
+			Assert.Equal(string.Empty, tvm.StartTime);
+			Assert.Equal(string.Empty, tvm.EndTime);
 		}
 
 		[Fact]
@@ -116,11 +132,11 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.SelectedTimeSegment.EndTime = "3/1/2017 1:00:00 PM";
 
 			// Assert
-			Assert.Equal("3/1/2017 1:00:00 PM", mvm.SelectedActivity.TimeSegments[0].EndTime);
+			Assert.Equal("3/1/2017 1:00:00 PM", mvm.SelectedActivity.GetTimeSegment(0).EndTime);
 		}
 
 		[Fact]
-		public void SelectedIndex_WhenNewActivityIsAdded_PointsToNewActivity()
+		public void SelectedActivityIndex_WhenNewActivityIsAdded_PointsToNewActivity()
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
@@ -133,6 +149,23 @@ namespace TimeTortoise.ViewModel.Tests
 
 			// Assert
 			Assert.Equal(1, mvm.SelectedActivityIndex);
+		}
+
+		[Fact]
+		public void SelectedTimeSegmentIndex_WhenNewTimeSegmentIsAdded_PointsToNewTimeSegment()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+
+			// Act
+			mvm.SelectedActivityIndex = 0;
+			mvm.AddTimeSegment();
+			mvm.AddTimeSegment();
+
+			// Assert
+			Assert.Equal(1, mvm.SelectedTimeSegmentIndex);
 		}
 
 		[Fact]
@@ -152,7 +185,23 @@ namespace TimeTortoise.ViewModel.Tests
 		}
 
 		[Fact]
-		public void IsSaveEnabled_WhenSelectedIndexIsOutOfRangeLow1_IsFalse()
+		public void IsSaveEnabled_WhenNewTimeSegmentIsAdded_SwitchesToTrue()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+
+			// Act
+			Assert.Equal(false, mvm.IsSaveEnabled);
+			mvm.AddTimeSegment();
+
+			// Assert
+			Assert.Equal(true, mvm.IsSaveEnabled);
+		}
+
+		[Fact]
+		public void IsSaveEnabled_WhenSelectedActivityIndexIsOutOfRangeLow1_IsFalse()
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
@@ -164,7 +213,19 @@ namespace TimeTortoise.ViewModel.Tests
 		}
 
 		[Fact]
-		public void IsSaveEnabled_WhenSelectedIndexIsOutOfRangeLow2_IsFalse()
+		public void IsSaveEnabled_WhenSelectedTimeSegmentIndexIsOutOfRangeLow1_IsFalse()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+
+			// Assert
+			Assert.Equal(false, mvm.IsSaveEnabled);
+		}
+
+		[Fact]
+		public void IsSaveEnabled_WhenSelectedActivityIndexIsOutOfRangeLow2_IsFalse()
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
@@ -176,40 +237,89 @@ namespace TimeTortoise.ViewModel.Tests
 		}
 
 		[Fact]
-		public void IsSaveEnabled_WhenSelectedIndexIsOutOfRangeHigh_IsFalse()
+		public void IsSaveEnabled_WhenSelectedTimeSegmentIndexIsOutOfRangeLow2_IsFalse()
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel()) { SelectedTimeSegmentIndex = -1 };
 
 			// Assert
 			Assert.Equal(false, mvm.IsSaveEnabled);
 		}
 
 		[Fact]
-		public void ActivityName_WhenChanged_FiresCorrectEvents()
+		public void IsSaveEnabled_WhenSelectedActivityIndexIsOutOfRangeHigh_IsFalse()
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
-			// http://stackoverflow.com/a/249042/4803
-			var receivedEvents = new List<string>();
-			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
-			{
-				receivedEvents.Add(e.PropertyName);
-			};
-
-			// Act
-			mvm.AddActivity();
-			mvm.SelectedActivity.Name = "TestName1";
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel()) { SelectedTimeSegmentIndex = 99 };
 
 			// Assert
-			Assert.Equal("SelectedActivityIndex", receivedEvents[0]);
-			Assert.Equal("IsSaveEnabled", receivedEvents[1]);
-			Assert.Equal("SelectedActivity", receivedEvents[2]);
+			Assert.Equal(false, mvm.IsSaveEnabled);
 		}
+
+		[Fact]
+		public void IsSaveEnabled_WhenSelectedTimeSegmentIndexIsOutOfRangeHigh_IsFalse()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel()) { SelectedTimeSegmentIndex = 99 };
+
+			// Assert
+			Assert.Equal(false, mvm.IsSaveEnabled);
+		}
+
+		// This test passes even when mvm.SelectedActivity.Name is not changed. All of the events
+		// are firing due to mvm.AddActivity().
+		//[Fact]
+		//public void ActivityName_WhenChanged_FiresCorrectEvents()
+		//{
+		//	// Arrange
+		//	var mockRepository = new Mock<IRepository>();
+		//	mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+		//	var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+		//	// http://stackoverflow.com/a/249042/4803
+		//	var receivedEvents = new List<string>();
+		//	mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
+		//	{
+		//		receivedEvents.Add(e.PropertyName);
+		//	};
+
+		//	// Act
+		//	mvm.AddActivity();
+		//	//mvm.SelectedActivity.Name = "TestName1";
+
+		//	// Assert
+		//	Assert.Equal("SelectedActivityIndex", receivedEvents[0]);
+		//	Assert.Equal("IsSaveEnabled", receivedEvents[1]);
+		//	Assert.Equal("SelectedActivity", receivedEvents[2]);
+		//}
+
+		//[Fact]
+		//public void TimeSegmentEndTime_WhenChanged_FiresCorrectEvents()
+		//{
+		//	// Arrange
+		//	var mockRepository = new Mock<IRepository>();
+		//	mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+		//	var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+		//	var receivedEvents = new List<string>();
+		//	mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
+		//	{
+		//		receivedEvents.Add(e.PropertyName);
+		//	};
+
+		//	// Act
+		//	mvm.AddActivity();
+		//	mvm.SelectedTimeSegment.EndTime = "3/1/2017 1:00:00 PM";
+
+		//	// Assert
+		//	Assert.Equal("SelectedActivityIndex", receivedEvents[0]);
+		//	Assert.Equal("IsSaveEnabled", receivedEvents[1]);
+		//	Assert.Equal("SelectedActivity", receivedEvents[2]);
+		//}
 
 		[Fact]
 		public void ActivityList_WhenActivityIsDeleted_IsUpdated()
@@ -225,6 +335,23 @@ namespace TimeTortoise.ViewModel.Tests
 
 			// Assert
 			Assert.Equal(2, mvm.Activities.Count);
+		}
+
+		[Fact]
+		public void TimeSegmentList_WhenTimeSegmnetIsDeleted_IsUpdated()
+		{
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+			mvm.LoadActivities();
+
+			// Act
+			mvm.SelectedActivityIndex = 1;
+			mvm.SelectedTimeSegmentIndex = 1;
+			mvm.DeleteTimeSegment();
+
+			// Assert
+			Assert.Equal(1, mvm.SelectedActivity.NumObservableTimeSegments);
 		}
 
 		[Fact]
@@ -296,7 +423,7 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.StartStop();
 
 			// Assert
-			Assert.Equal(1, mvm.SelectedActivity.TimeSegments.Count);
+			Assert.Equal(1, mvm.SelectedActivity.NumObservableTimeSegments);
 		}
 
 		[Fact]
@@ -315,8 +442,8 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.StartStop();
 
 			// Assert
-			Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.SelectedActivity.TimeSegments[0].StartTime);
-			Assert.Equal(string.Empty, mvm.SelectedActivity.TimeSegments[0].EndTime);
+			Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.SelectedActivity.GetTimeSegment(0).StartTime);
+			Assert.Equal(string.Empty, mvm.SelectedActivity.GetTimeSegment(0).EndTime);
 		}
 
 		[Fact]
@@ -338,8 +465,8 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.StartStop();
 
 			// Assert
-			Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.SelectedActivity.TimeSegments[0].StartTime);
-			Assert.Equal(endTime.ToString(CultureInfo.CurrentUICulture), mvm.SelectedActivity.TimeSegments[0].EndTime);
+			Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.SelectedActivity.GetTimeSegment(0).StartTime);
+			Assert.Equal(endTime.ToString(CultureInfo.CurrentUICulture), mvm.SelectedActivity.GetTimeSegment(0).EndTime);
 		}
 
 		[Fact]
@@ -365,23 +492,6 @@ namespace TimeTortoise.ViewModel.Tests
 		}
 
 		[Fact]
-		public void StartStop_WhenNoActivityIsSelected_Throws()
-		{
-			// Arrange
-			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
-
-			// Act
-			// https://www.richard-banks.org/2015/07/stop-using-assertthrows-in-your-bdd.html
-			var exception = Record.Exception(() => mvm.StartStop());
-
-			// Assert
-			Assert.NotNull(exception);
-			Assert.IsType<InvalidOperationException>(exception);
-		}
-
-		[Fact]
 		public void TimeSegmentList_WhenTimerStops_UpdatesUI()
 		{
 			// Arrange
@@ -393,7 +503,7 @@ namespace TimeTortoise.ViewModel.Tests
 			// Act
 			mvm.AddActivity();
 			mvm.SelectedActivityIndex = 0;
-			mvm.SelectedActivity.TimeSegments.CollectionChanged += delegate (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+			mvm.SelectedActivity.ObservableTimeSegments.CollectionChanged += delegate (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
 			{
 				receivedEvents.Add(e.Action.ToString());
 			};
@@ -408,6 +518,7 @@ namespace TimeTortoise.ViewModel.Tests
 		[Fact]
 		public void TimeSegmentList_WhenTimeSegmentIsDeleted_IsUpdated()
 		{
+			// Arrange
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
@@ -419,7 +530,64 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.DeleteTimeSegment();
 
 			// Assert
-			Assert.Equal(1, mvm.SelectedActivity.TimeSegments.Count);
+			Assert.Equal(1, mvm.SelectedActivity.NumObservableTimeSegments);
+		}
+
+		[Fact]
+		public void ValidationMessage_WhenStartTimeIsValid_IsEmpty()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			var vmvm = new ValidationMessageViewModel();
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), vmvm);
+			mvm.LoadActivities();
+
+			// Act
+			mvm.SelectedActivityIndex = 1;
+			mvm.SelectedTimeSegmentIndex = 0;
+			mvm.SelectedTimeSegment.StartTime = "3/1/2017 1:00 PM";
+
+			// Assert
+			Assert.Equal(string.Empty, vmvm.ValidationMessages);
+		}
+
+		[Fact]
+		public void ValidationMessage_WhenStartTimeIsInvalid_HasCorrectMessage()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			var vmvm = new ValidationMessageViewModel();
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), vmvm);
+			mvm.LoadActivities();
+
+			// Act
+			mvm.SelectedActivityIndex = 1;
+			mvm.SelectedTimeSegmentIndex = 0;
+			mvm.SelectedTimeSegment.StartTime = "2/31/2017 1:00 PM";
+
+			// Assert
+			Assert.Equal("Please enter a valid start date and time.\r\n", vmvm.ValidationMessages);
+		}
+
+		[Fact]
+		public void ValidationMessage_WhenEndTimeIsInvalid_HasCorrectMessage()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			var vmvm = new ValidationMessageViewModel();
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), vmvm);
+			mvm.LoadActivities();
+
+			// Act
+			mvm.SelectedActivityIndex = 1;
+			mvm.SelectedTimeSegmentIndex = 0;
+			mvm.SelectedTimeSegment.EndTime = "2/31/2017 1:00 PM";
+
+			// Assert
+			Assert.Equal("Please enter a valid end date and time.\r\n", vmvm.ValidationMessages);
 		}
 	}
 }

@@ -5,10 +5,10 @@
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{82CEEDB0-5246-4BB1-A710-C29FFBF651CD}</ProjectGuid>
+    <ProjectGuid>{29251B0F-78AF-403D-B583-26657CA3F780}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>TimeTortoise.ViewModel.Tests</RootNamespace>
-    <AssemblyName>TimeTortoise.ViewModel.Tests</AssemblyName>
+    <RootNamespace>TimeTortoise.ExceptionTests</RootNamespace>
+    <AssemblyName>TimeTortoise.ExceptionTests</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -38,10 +38,8 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExceptionTests\ExceptionTests.cs" />
-    <Compile Include="MainViewModelTests.cs" />
+    <Compile Include="ExceptionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TimeSegmentViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TimeTortoise.DAL\TimeTortoise.DAL.csproj">
@@ -51,6 +49,10 @@
     <ProjectReference Include="..\TimeTortoise.Model\TimeTortoise.Model.csproj">
       <Project>{5bca1bb8-9d17-4482-ae99-d1b5fb2c12be}</Project>
       <Name>TimeTortoise.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTortoise.ViewModel.Tests\TimeTortoise.ViewModel.Tests.csproj">
+      <Project>{82ceedb0-5246-4bb1-a710-c29ffbf651cd}</Project>
+      <Name>TimeTortoise.ViewModel.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\TimeTortoise.ViewModel\TimeTortoise.ViewModel.csproj">
       <Project>{884c030c-28e2-47c4-bb4e-4e03eb09f2ef}</Project>

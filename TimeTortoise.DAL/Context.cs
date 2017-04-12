@@ -5,11 +5,11 @@ namespace TimeTortoise.DAL
 {
 	public class Context : DbContext
 	{
-		internal DbSet<Activity> Activities { get; set; }
+		public DbSet<Activity> Activities { get; set; }
 
-		internal DbSet<TimeSegment> TimeSegments { get; set; }
+		public DbSet<TimeSegment> TimeSegments { get; set; }
 
-		protected Context()
+		public Context()
 		{
 			
 		}

@@ -17,6 +17,7 @@
             <Sources>
               <Exclude>
                 <Source>.*\\Migrations\\.*</Source>
+                <Source>.*\\ExceptionTests\\.*</Source>
               </Exclude>
             </Sources>
           </CodeCoverage>

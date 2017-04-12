@@ -63,7 +63,7 @@ namespace TimeTortoise.ViewModel
 				var avm = new ActivityViewModel(activity);
 				foreach (var ts in activity.TimeSegments)
 				{
-					avm.TimeSegments.Add(new TimeSegmentViewModel(ts, _validationMessageViewModel));
+					avm.AddTimeSegment(new TimeSegmentViewModel(ts, _validationMessageViewModel));
 				}
 				Activities.Add(avm);
 			}
@@ -90,6 +90,12 @@ namespace TimeTortoise.ViewModel
 			Activities.Add(new ActivityViewModel(activity));
 			_repository.AddActivity(activity);
 			SelectedActivityIndex = Activities.Count - 1;
+		}
+
+		public void AddTimeSegment()
+		{
+			var ts = new TimeSegment();
+			SelectedTimeSegmentIndex = SelectedActivity.AddTimeSegment(ts, new TimeSegmentViewModel(ts, _validationMessageViewModel)) - 1;
 		}
 
 		public void DeleteActivity()
@@ -121,13 +127,12 @@ namespace TimeTortoise.ViewModel
 			if (_isStarted)
 			{
 				_currentTimeSegment = new TimeSegment {StartTime = new DateTime(_dateTime.Now.Ticks)};
-				SelectedActivity.TimeSegments.Add(new TimeSegmentViewModel(_currentTimeSegment, _validationMessageViewModel));
-				SelectedActivity.AddTimeSegment(_currentTimeSegment);
+				SelectedActivity.AddTimeSegment(_currentTimeSegment, new TimeSegmentViewModel(_currentTimeSegment, _validationMessageViewModel));
 			}
 			else
 			{
 				_currentTimeSegment.EndTime = new DateTime(_dateTime.Now.Ticks);
-				SelectedActivity.TimeSegments[SelectedActivity.TimeSegments.Count-1] = new TimeSegmentViewModel(_currentTimeSegment, _validationMessageViewModel);
+				SelectedActivity.UpdateTimeSegment(new TimeSegmentViewModel(_currentTimeSegment, _validationMessageViewModel));
 				_repository.SaveActivity();
 			}
 		}
@@ -148,7 +153,7 @@ namespace TimeTortoise.ViewModel
 				else
 				{
 					IsSaveEnabled = true;
-					SelectedTimeSegment = SelectedActivity.TimeSegments[_selectedTimeSegmentIndex];
+					SelectedTimeSegment = SelectedActivity.GetTimeSegment(_selectedTimeSegmentIndex);
 				}
 			}
 		}
@@ -163,8 +168,7 @@ namespace TimeTortoise.ViewModel
 		public void DeleteTimeSegment()
 		{
 			var selectedTimeSegment = SelectedTimeSegment;
-			SelectedActivity.TimeSegments.Remove(selectedTimeSegment);
-			_repository.SaveActivity();
+			SelectedActivity.RemoveTimeSegment(_repository, selectedTimeSegment);
 		}
 	}
 }

@@ -23,7 +23,7 @@
 
 		</ListView>
 		<ListView 
-			ItemsSource="{x:Bind Main.SelectedActivity.TimeSegments, Mode=OneWay}"
+			ItemsSource="{x:Bind Main.SelectedActivity.ObservableTimeSegments, Mode=OneWay}"
 			SelectedIndex="{x:Bind Main.SelectedTimeSegmentIndex, Mode=TwoWay}"
 			HorizontalAlignment="Left" Height="207" Margin="555,29,0,0" VerticalAlignment="Top" Width="630">
 
@@ -35,9 +35,9 @@
 							<ColumnDefinition Width="Auto" MinWidth="200" />
 							<ColumnDefinition Width="Auto" MinWidth="200" />
 						</Grid.ColumnDefinitions>
-						<TextBlock Grid.Column="0" Text="{x:Bind StartTime}" />
-						<TextBlock Grid.Column="1" Text="{x:Bind EndTime}" />
-						<TextBlock Grid.Column="2" Text="{x:Bind Duration}" />
+						<TextBlock Grid.Column="0" Text="{x:Bind StartTime, Mode=OneWay}" />
+						<TextBlock Grid.Column="1" Text="{x:Bind EndTime, Mode=OneWay}" />
+						<TextBlock Grid.Column="2" Text="{x:Bind Duration, Mode=OneWay}" />
 					</Grid>
 				</DataTemplate>
 			</ListView.ItemTemplate>
@@ -63,9 +63,12 @@
 			HorizontalAlignment="Left" Margin="554,251,0,0" VerticalAlignment="Top" Width="230"/>
 		<TextBox Text="{x:Bind Main.SelectedTimeSegment.EndTime, Mode=TwoWay}"
 			HorizontalAlignment="Left" Margin="816,251,0,0" VerticalAlignment="Top" Width="230"/>
-		<TextBlock HorizontalAlignment="Left" Margin="555,298,0,0" TextWrapping="Wrap"
+		<TextBlock HorizontalAlignment="Left" Margin="555,366,0,0" TextWrapping="Wrap"
 				   Text="{x:Bind ValidationMessage.ValidationMessages, Mode=TwoWay}"
 				   VerticalAlignment="Top" Height="73" Width="630"/>
+		<Button Click="{x:Bind Main.AddTimeSegment}"
+				Content="Add" HorizontalAlignment="Left" Margin="555,298,0,0" VerticalAlignment="Top"/>
+		<Button Click="{x:Bind Main.DeleteTimeSegment}"
+				Content="Delete" HorizontalAlignment="Left" Margin="638,298,0,0" VerticalAlignment="Top"/>
 	</Grid>
-
 </Page>

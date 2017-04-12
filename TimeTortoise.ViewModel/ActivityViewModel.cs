@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using TimeTortoise.DAL;
 using TimeTortoise.Model;
 
 namespace TimeTortoise.ViewModel
@@ -15,11 +16,43 @@ namespace TimeTortoise.ViewModel
 			set { SetProperty(This.Name, value, () => This.Name = value); }
 		}
 
-		public readonly ObservableCollection<TimeSegmentViewModel> TimeSegments = new ObservableCollection<TimeSegmentViewModel>();
+		public readonly ObservableCollection<TimeSegmentViewModel> ObservableTimeSegments = new ObservableCollection<TimeSegmentViewModel>();
 
-		internal void AddTimeSegment(TimeSegment ts)
+		public void AddTimeSegment(TimeSegmentViewModel tsvm)
+		{
+			ObservableTimeSegments.Add(tsvm);
+		}
+
+		public int AddTimeSegment(TimeSegment ts, TimeSegmentViewModel tsvm)
 		{
 			This.TimeSegments.Add(ts);
+			ObservableTimeSegments.Add(tsvm);
+			return ObservableTimeSegments.Count;
+		}
+		public TimeSegmentViewModel GetTimeSegment(int index)
+		{
+			return ObservableTimeSegments[index];
+		}
+
+		public void UpdateTimeSegment(TimeSegmentViewModel tsvm)
+		{
+			ObservableTimeSegments[ObservableTimeSegments.Count - 1] = tsvm;
+		}
+
+		public void RemoveTimeSegment(IRepository repository, TimeSegmentViewModel tsvm)
+		{
+			ObservableTimeSegments.Remove(tsvm);
+			repository.DeleteTimeSegment(tsvm.TimeSegment);
+		}
+
+		public int NumObservableTimeSegments
+		{
+			get { return ObservableTimeSegments.Count; }
+		}
+
+		public int NumTimeSegments
+		{
+			get { return This.TimeSegments.Count; }
 		}
 	}
 }
