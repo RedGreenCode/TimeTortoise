@@ -55,20 +55,24 @@
 				Content="Delete"
 				IsEnabled="{x:Bind Main.IsSaveEnabled, Mode=OneWay}"  
 				HorizontalAlignment="Left" Margin="307,298,0,0" VerticalAlignment="Top"/>
-		<Button Click="{x:Bind Main.StartStop}"
+		<Button Click="{x:Bind StartStop}"
 				Content="{x:Bind Main.StartStopText, Mode=OneWay}"
 				IsEnabled="{x:Bind Main.IsSaveEnabled, Mode=OneWay}"  
 				HorizontalAlignment="Left" Margin="441,251,0,0" VerticalAlignment="Top"/>
-		<TextBox Text="{x:Bind Main.SelectedTimeSegment.StartTime, Mode=TwoWay}"
+		<TextBox Text="{x:Bind Main.SelectedTimeSegmentStartTime, Mode=TwoWay}"
 			HorizontalAlignment="Left" Margin="554,251,0,0" VerticalAlignment="Top" Width="230"/>
-		<TextBox Text="{x:Bind Main.SelectedTimeSegment.EndTime, Mode=TwoWay}"
+		<TextBox Text="{x:Bind Main.SelectedTimeSegmentEndTime, Mode=TwoWay}"
 			HorizontalAlignment="Left" Margin="816,251,0,0" VerticalAlignment="Top" Width="230"/>
 		<TextBlock HorizontalAlignment="Left" Margin="555,366,0,0" TextWrapping="Wrap"
 				   Text="{x:Bind ValidationMessage.ValidationMessages, Mode=TwoWay}"
 				   VerticalAlignment="Top" Height="73" Width="630"/>
 		<Button Click="{x:Bind Main.AddTimeSegment}"
-				Content="Add" HorizontalAlignment="Left" Margin="555,298,0,0" VerticalAlignment="Top"/>
+				Content="Add"
+				IsEnabled="{x:Bind Main.IsTimeSegmentAddEnabled, Mode=OneWay}"  
+				HorizontalAlignment="Left" Margin="555,298,0,0" VerticalAlignment="Top"/>
 		<Button Click="{x:Bind Main.DeleteTimeSegment}"
-				Content="Delete" HorizontalAlignment="Left" Margin="638,298,0,0" VerticalAlignment="Top"/>
+				Content="Delete"
+				IsEnabled="{x:Bind Main.IsTimeSegmentDeleteEnabled, Mode=OneWay}"  
+				HorizontalAlignment="Left" Margin="638,298,0,0" VerticalAlignment="Top"/>
 	</Grid>
 </Page>

@@ -12,18 +12,18 @@ namespace TimeTortoise.ViewModel
 
 		public string Name
 		{
-			get { return This.Name; }
-			set { SetProperty(This.Name, value, () => This.Name = value); }
+			get => This.Name;
+			set { SetProperty(() => This.Name = value); }
 		}
 
 		public readonly ObservableCollection<TimeSegmentViewModel> ObservableTimeSegments = new ObservableCollection<TimeSegmentViewModel>();
 
-		public void AddTimeSegment(TimeSegmentViewModel tsvm)
+		internal void AddTimeSegment(TimeSegmentViewModel tsvm)
 		{
 			ObservableTimeSegments.Add(tsvm);
 		}
 
-		public int AddTimeSegment(TimeSegment ts, TimeSegmentViewModel tsvm)
+		internal int AddTimeSegment(TimeSegment ts, TimeSegmentViewModel tsvm)
 		{
 			This.TimeSegments.Add(ts);
 			ObservableTimeSegments.Add(tsvm);
@@ -45,14 +45,8 @@ namespace TimeTortoise.ViewModel
 			repository.DeleteTimeSegment(tsvm.TimeSegment);
 		}
 
-		public int NumObservableTimeSegments
-		{
-			get { return ObservableTimeSegments.Count; }
-		}
+		public int NumObservableTimeSegments => ObservableTimeSegments.Count;
 
-		public int NumTimeSegments
-		{
-			get { return This.TimeSegments.Count; }
-		}
+		public int NumTimeSegments => This.TimeSegments.Count;
 	}
 }

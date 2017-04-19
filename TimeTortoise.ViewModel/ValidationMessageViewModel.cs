@@ -15,7 +15,7 @@ namespace TimeTortoise.ViewModel
 			}
 
 			public bool IsValid { get; set; }
-			public string Message { get; set; }
+			public string Message { get; }
 		}
 
 		private readonly Dictionary<string, ValidationMessage> _messages;
@@ -42,8 +42,8 @@ namespace TimeTortoise.ViewModel
 		private string _validationMessages = string.Empty;
 		public string ValidationMessages
 		{
-			get { return _validationMessages; }
-			set { SetProperty(ref _validationMessages, value); }
+			get => _validationMessages;
+			set => SetProperty(ref _validationMessages, value);
 		}
 
 		public void SetValidationMessages()

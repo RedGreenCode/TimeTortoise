@@ -20,8 +20,13 @@ namespace TimeTortoise.ViewModel
 			_repository = repository;
 			_dateTime = dateTime;
 			_validationMessageViewModel = validationMessageViewModel;
-			_selectedTimeSegment = new TimeSegmentViewModel(new TimeSegment(), _validationMessageViewModel);
+			_selectedTimeSegment = null;
 			LoadActivities();
+		}
+
+		private bool SelectedActivityIndexIsValid()
+		{
+			return _selectedActivityIndex >= 0 && _selectedActivityIndex < Activities.Count;
 		}
 
 		public ObservableCollection<ActivityViewModel> Activities { get; private set; } = new ObservableCollection<ActivityViewModel>();
@@ -29,29 +34,31 @@ namespace TimeTortoise.ViewModel
 		private int _selectedActivityIndex = -1;
 		public int SelectedActivityIndex
 		{
-			get { return _selectedActivityIndex; }
+			get => _selectedActivityIndex;
 			set
 			{
 				SetProperty(ref _selectedActivityIndex, value);
 
-				if (_selectedActivityIndex < 0 || _selectedActivityIndex >= Activities.Count)
+				if (!SelectedActivityIndexIsValid())
 				{
 					IsSaveEnabled = false;
-					SelectedActivity = new ActivityViewModel(new Activity());
+					IsTimeSegmentAddEnabled = false;
+					SelectedActivity = null;
 				}
 				else
 				{
 					IsSaveEnabled = true;
+					IsTimeSegmentAddEnabled = true;
 					SelectedActivity = Activities[_selectedActivityIndex];
 				}
 			}
 		}
 
-		private ActivityViewModel _selectedActivity = new ActivityViewModel(new Activity());
+		private ActivityViewModel _selectedActivity;
 		public ActivityViewModel SelectedActivity
 		{
-			get { return _selectedActivity; }
-			private set { SetProperty(ref _selectedActivity, value); }
+			get => _selectedActivity;
+			private set => SetProperty(ref _selectedActivity, value);
 		}
 
 		public void LoadActivities()
@@ -77,11 +84,22 @@ namespace TimeTortoise.ViewModel
 		private bool _isSaveEnabled;
 		public bool IsSaveEnabled
 		{
-			get { return _isSaveEnabled; }
-			private set
-			{
-				SetProperty(ref _isSaveEnabled, value);
-			}
+			get => _isSaveEnabled;
+			private set => SetProperty(ref _isSaveEnabled, value);
+		}
+
+		private bool _isTimeSegmentAddEnabled;
+		public bool IsTimeSegmentAddEnabled
+		{
+			get => _isTimeSegmentAddEnabled;
+			private set => SetProperty(ref _isTimeSegmentAddEnabled, value);
+		}
+
+		private bool _isTimeSegmentDeleteEnabled;
+		public bool IsTimeSegmentDeleteEnabled
+		{
+			get => _isTimeSegmentDeleteEnabled;
+			private set => SetProperty(ref _isTimeSegmentDeleteEnabled, value);
 		}
 
 		public void AddActivity()
@@ -94,8 +112,16 @@ namespace TimeTortoise.ViewModel
 
 		public void AddTimeSegment()
 		{
-			var ts = new TimeSegment();
-			SelectedTimeSegmentIndex = SelectedActivity.AddTimeSegment(ts, new TimeSegmentViewModel(ts, _validationMessageViewModel)) - 1;
+			if (!SelectedActivityIndexIsValid())
+				throw new InvalidOperationException("Can't add a time segment without first selecting an activity.");
+			var ts = new TimeSegment
+			{
+				StartTime = new DateTime(_dateTime.Now.Ticks),
+				EndTime = new DateTime(_dateTime.Now.Ticks)
+			};
+			var tsvm = new TimeSegmentViewModel(ts, _validationMessageViewModel);
+			SelectedTimeSegmentIndex = SelectedActivity.AddTimeSegment(ts, tsvm) - 1;
+			_repository.AddTimeSgment(ts);
 		}
 
 		public void DeleteActivity()
@@ -108,31 +134,34 @@ namespace TimeTortoise.ViewModel
 		private string _startStopText = "Start";
 		public string StartStopText
 		{
-			get { return _startStopText; }
-			private set
-			{
-				SetProperty(ref _startStopText, value);
-			}
+			get => _startStopText;
+			private set => SetProperty(ref _startStopText, value);
 		}
 
 		private bool _isStarted;
 		private TimeSegment _currentTimeSegment;
+		private TimeSegmentViewModel _currentTimeSegmentViewModel;
 		public void StartStop()
 		{
-			if (_selectedActivityIndex < 0 || _selectedActivityIndex >= Activities.Count)
-				throw new InvalidOperationException("Can't start timing without a selected activity");
+			if (!SelectedActivityIndexIsValid())
+				throw new InvalidOperationException("Can't start timing without first selecting an activity.");
 
 			_isStarted = !_isStarted;
 			StartStopText = _isStarted ? "Stop" : "Start";
 			if (_isStarted)
 			{
-				_currentTimeSegment = new TimeSegment {StartTime = new DateTime(_dateTime.Now.Ticks)};
-				SelectedActivity.AddTimeSegment(_currentTimeSegment, new TimeSegmentViewModel(_currentTimeSegment, _validationMessageViewModel));
+				_currentTimeSegment = new TimeSegment
+				{
+					StartTime = new DateTime(_dateTime.Now.Ticks),
+					EndTime = new DateTime(_dateTime.Now.Ticks)
+				};
+				_currentTimeSegmentViewModel = new TimeSegmentViewModel(_currentTimeSegment, _validationMessageViewModel);
+				SelectedActivity.AddTimeSegment(_currentTimeSegment, _currentTimeSegmentViewModel);
 			}
 			else
 			{
 				_currentTimeSegment.EndTime = new DateTime(_dateTime.Now.Ticks);
-				SelectedActivity.UpdateTimeSegment(new TimeSegmentViewModel(_currentTimeSegment, _validationMessageViewModel));
+				SelectedActivity.UpdateTimeSegment(_currentTimeSegmentViewModel);
 				_repository.SaveActivity();
 			}
 		}
@@ -140,19 +169,19 @@ namespace TimeTortoise.ViewModel
 		private int _selectedTimeSegmentIndex = -1;
 		public int SelectedTimeSegmentIndex
 		{
-			get { return _selectedTimeSegmentIndex; }
+			get => _selectedTimeSegmentIndex;
 			set
 			{
 				SetProperty(ref _selectedTimeSegmentIndex, value);
 
-				if (_selectedTimeSegmentIndex < 0 || _selectedTimeSegmentIndex >= Activities.Count)
+				if (_selectedTimeSegmentIndex < 0 || SelectedActivity == null || _selectedTimeSegmentIndex >= SelectedActivity.NumTimeSegments)
 				{
-					IsSaveEnabled = false;
-					SelectedTimeSegment = new TimeSegmentViewModel(new TimeSegment(), _validationMessageViewModel);
+					IsTimeSegmentDeleteEnabled = false;
+					SelectedTimeSegment = null;
 				}
 				else
 				{
-					IsSaveEnabled = true;
+					IsTimeSegmentDeleteEnabled = true;
 					SelectedTimeSegment = SelectedActivity.GetTimeSegment(_selectedTimeSegmentIndex);
 				}
 			}
@@ -161,8 +190,26 @@ namespace TimeTortoise.ViewModel
 		private TimeSegmentViewModel _selectedTimeSegment;
 		public TimeSegmentViewModel SelectedTimeSegment
 		{
-			get { return _selectedTimeSegment; }
-			private set { SetProperty(ref _selectedTimeSegment, value); }
+			get => _selectedTimeSegment;
+			private set => SetProperty(ref _selectedTimeSegment, value);
+		}
+
+		public string SelectedTimeSegmentStartTime
+		{
+			get => _selectedTimeSegment == null ? string.Empty : _selectedTimeSegment.StartTime;
+			set
+			{
+				if (_selectedTimeSegment != null) SelectedTimeSegment.StartTime = value;
+			}
+		}
+
+		public string SelectedTimeSegmentEndTime
+		{
+			get => _selectedTimeSegment == null ? string.Empty : _selectedTimeSegment.EndTime;
+			set
+			{
+				if (_selectedTimeSegment != null) SelectedTimeSegment.EndTime = value;
+			}
 		}
 
 		public void DeleteTimeSegment()

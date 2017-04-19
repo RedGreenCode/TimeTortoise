@@ -7,34 +7,25 @@ namespace TimeTortoise.ViewModel
 	public class TimeSegmentViewModel : NotificationBase<TimeSegment>
 	{
 		private readonly ValidationMessageViewModel _validationMessageViewModel;
-		private readonly TimeSegment _timeSegment;
-		
+
 		public TimeSegmentViewModel(TimeSegment timeSegment, ValidationMessageViewModel validationMessageViewModel) : base(timeSegment)
 		{
 			_validationMessageViewModel = validationMessageViewModel;
-			_timeSegment = timeSegment;
+			TimeSegment = timeSegment;
 		}
 
-		public TimeSegment TimeSegment
-		{
-			get { return _timeSegment; }
-		}
+		public TimeSegment TimeSegment { get; }
 
 		public string StartTime
 		{
-			get
-			{
-				return This.StartTime == DateTime.MinValue
-					? string.Empty
-					: This.StartTime.ToString(CultureInfo.CurrentUICulture);
-			}
+			get => This.StartTime.ToString(CultureInfo.CurrentUICulture);
 			set
 			{
 				_validationMessageViewModel.SetFieldValid();
 				try
 				{
-					SetProperty(This.StartTime, DateTime.Parse(value),
-						() => This.StartTime = DateTime.Parse(value));
+					SetProperty(() => This.StartTime = DateTime.Parse(value));
+					RaisePropertyChanged("Duration");
 				}
 				catch (FormatException)
 				{
@@ -49,19 +40,14 @@ namespace TimeTortoise.ViewModel
 
 		public string EndTime
 		{
-			get
-			{
-				return This.EndTime == DateTime.MinValue
-					? string.Empty
-					: This.EndTime.ToString(CultureInfo.CurrentUICulture);
-			}
+			get => This.EndTime.ToString(CultureInfo.CurrentUICulture);
 			set
 			{
 				_validationMessageViewModel.SetFieldValid();
 				try
 				{
-					SetProperty(This.EndTime, DateTime.Parse(value),
-						() => This.EndTime = DateTime.Parse(value));
+					SetProperty(() => This.EndTime = DateTime.Parse(value));
+					RaisePropertyChanged("Duration");
 				}
 				catch (FormatException)
 				{

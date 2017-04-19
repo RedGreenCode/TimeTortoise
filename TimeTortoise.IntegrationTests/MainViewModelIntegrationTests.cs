@@ -33,7 +33,7 @@ namespace TimeTortoise.IntegrationTests
 		// Integration tests
 
 		[Fact]
-		public void SelectedActivity_WhenNoActivitySelected_HasNullName()
+		public void SelectedActivity_WhenNoActivitySelected_IsNull()
 		{
 			var connection = GetConnection();
 			try
@@ -47,7 +47,7 @@ namespace TimeTortoise.IntegrationTests
 					var avm = mvm.SelectedActivity;
 
 					// Assert
-					Assert.Equal(null, avm.Name);
+					Assert.Equal(null, avm);
 				}
 			}
 			finally
@@ -237,7 +237,7 @@ namespace TimeTortoise.IntegrationTests
 		}
 
 		[Fact]
-		public void TimeSegmnet_WhenAddedAndSaved_HasCorrectStartAndEndTimes()
+		public void TimeSegment_WhenAddedAndSaved_HasCorrectStartAndEndTimes()
 		{
 			var connection = GetConnection();
 			try
@@ -253,14 +253,42 @@ namespace TimeTortoise.IntegrationTests
 					// Act
 					mvm.AddActivity();
 					mvm.AddTimeSegment();
-					var endTime = new DateTime(2017, 3, 1, 11, 0, 0);
-					mockTime.Setup(x => x.Now).Returns(endTime);
 					mvm.Save();
 					mvm.LoadActivities();
 
 					// Assert
-					Assert.Equal(string.Empty, mvm.Activities[0].ObservableTimeSegments[0].StartTime);
-					Assert.Equal(string.Empty, mvm.Activities[0].ObservableTimeSegments[0].EndTime);
+					Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.Activities[0].ObservableTimeSegments[0].StartTime);
+					Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.Activities[0].ObservableTimeSegments[0].EndTime);
+				}
+			}
+			finally
+			{
+				connection.Close();
+			}
+		}
+
+		[Fact]
+		public void TimeSegment_WhenAddedAndDeleted_IsDeleted()
+		{
+			var connection = GetConnection();
+			try
+			{
+				using (var context = GetContext(connection))
+				{
+					// Arrange
+					var mockTime = new Mock<IDateTime>();
+					var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
+					mockTime.Setup(x => x.Now).Returns(startTime);
+					var mvm = new MainViewModel(new Repository(context), mockTime.Object, new ValidationMessageViewModel());
+
+					// Act
+					mvm.AddActivity();
+					mvm.AddTimeSegment();
+					mvm.DeleteTimeSegment();
+
+					// Assert
+					//Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.Activities[0].ObservableTimeSegments[0].StartTime);
+					//Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.Activities[0].ObservableTimeSegments[0].EndTime);
 				}
 			}
 			finally

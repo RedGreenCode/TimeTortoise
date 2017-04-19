@@ -13,22 +13,21 @@ namespace TimeTortoise.ViewModel
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		// SetField (Name, value); // where there is a data member
-		protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string property = null)
+		protected void SetProperty<T>(ref T field, T value, [CallerMemberName] string property = null)
 		{
-			if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+			if (EqualityComparer<T>.Default.Equals(field, value)) return;
 			field = value;
 			RaisePropertyChanged(property);
-			return true;
 		}
 
 		// SetField(()=> somewhere.Name = value; somewhere.Name, value) // Advanced case where you rely on another property
-		protected void SetProperty<T>(T currentValue, T newValue, Action doSet, [CallerMemberName] string property = null)
+		protected void SetProperty(Action doSet, [CallerMemberName] string property = null)
 		{
 			doSet.Invoke();
 			RaisePropertyChanged(property);
 		}
 
-		private void RaisePropertyChanged(string property)
+		protected void RaisePropertyChanged(string property)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
 		}

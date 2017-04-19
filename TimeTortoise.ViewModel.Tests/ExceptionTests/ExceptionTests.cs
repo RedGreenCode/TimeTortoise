@@ -29,5 +29,21 @@ namespace TimeTortoise.ViewModel.Tests.ExceptionTests
 			Assert.NotNull(exception);
 			Assert.IsType<InvalidOperationException>(exception);
 		}
+
+		[Fact]
+		public void AddTimeSegment_WhenNoActivityIsSelected_Throws()
+		{
+			// Arrange
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(MainViewModelTests.GetActivities());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+
+			// Act
+			var exception = Record.Exception(() => mvm.AddTimeSegment());
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.IsType<InvalidOperationException>(exception);
+		}
 	}
 }

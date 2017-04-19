@@ -1,7 +1,8 @@
-﻿using Xunit;
-using TimeTortoise.DAL;
+﻿using TimeTortoise.DAL;
+using TimeTortoise.Model;
+using Xunit;
 
-namespace TimeTortoise.ViewModel.Tests
+namespace TimeTortoise.IntegrationTests
 {
 	/// <summary>
 	/// These aren't really tests. They are workarounds for various limitations
@@ -11,12 +12,27 @@ namespace TimeTortoise.ViewModel.Tests
 	public class ContextTests
 	{
 		[Fact]
-		public void UseDbSetAccessors()
+		public void UseAccessors()
 		{
-			// The DbSet accessors in the Context class don't all appear to be used
-			// as far as code coverage can tell, but they can't be removed.
+			// A number of accessors are used by Entity Framework, but code analysis tools don't know that.
+			// Artificially use them here to indicate that they are useful and should not be removed.
 			var dbc = new Context {Activities = null};
 			var ts = dbc.TimeSegments;
+			Assert.NotNull(ts);
+			dbc.TimeSegments = null;
+
+			var activity = new Activity();
+			var activityId = activity.Id;
+			Assert.Equal(0, activityId);
+			activity.Id = 0;
+
+			var timeSegment = new TimeSegment();
+			var timeSegmentId = timeSegment.Id;
+			Assert.Equal(0, timeSegmentId);
+			timeSegment.Id = 0;
+			activityId = timeSegment.ActivityId;
+			Assert.Equal(0, activityId);
+			timeSegment.ActivityId = 0;
 		}
 	}
 }

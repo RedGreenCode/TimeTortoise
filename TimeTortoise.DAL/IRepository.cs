@@ -10,6 +10,7 @@ namespace TimeTortoise.DAL
 		void AddActivity(Activity activity);
 		void SaveActivity();
 		void DeleteActivity(Activity activity);
+		void AddTimeSgment(TimeSegment ts);
 		void DeleteTimeSegment(TimeSegment ts);
 	}
 }
