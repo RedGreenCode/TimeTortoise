@@ -73,6 +73,9 @@
 		<Button Click="{x:Bind Main.DeleteTimeSegment}"
 				Content="Delete"
 				IsEnabled="{x:Bind Main.IsTimeSegmentDeleteEnabled, Mode=OneWay}"  
-				HorizontalAlignment="Left" Margin="638,298,0,0" VerticalAlignment="Top"/>
-	</Grid>
+				HorizontalAlignment="Left" Margin="638,300,0,0" VerticalAlignment="Top"/>
+        <CalendarDatePicker 
+            Date="{x:Bind Main.DateRangeStart, Mode=TwoWay}"
+            HorizontalAlignment="Left" Margin="555,466,0,0" VerticalAlignment="Top"/>
+    </Grid>
 </Page>

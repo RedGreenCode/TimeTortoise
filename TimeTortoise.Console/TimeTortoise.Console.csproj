@@ -1,25 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
-    <AssemblyName>TimeTortoise.Console</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>TimeTortoise.Console</PackageId>
-    <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.7.8" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TimeTortoise.DAL\TimeTortoise.DAL.csproj" />
     <ProjectReference Include="..\TimeTortoise.Model\TimeTortoise.Model.csproj" />
+    <ProjectReference Include="..\TimeTortoise.TestHelper\TimeTortoise.TestHelper.csproj" />
     <ProjectReference Include="..\TimeTortoise.ViewModel\TimeTortoise.ViewModel.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Moq" Version="4.7.8" />
   </ItemGroup>
 
 </Project>

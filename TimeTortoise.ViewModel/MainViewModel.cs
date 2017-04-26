@@ -50,6 +50,7 @@ namespace TimeTortoise.ViewModel
 					IsSaveEnabled = true;
 					IsTimeSegmentAddEnabled = true;
 					SelectedActivity = Activities[_selectedActivityIndex];
+					LoadTimeSegments();
 				}
 			}
 		}
@@ -73,6 +74,16 @@ namespace TimeTortoise.ViewModel
 					avm.AddTimeSegment(new TimeSegmentViewModel(ts, _validationMessageViewModel));
 				}
 				Activities.Add(avm);
+			}
+		}
+
+		public void LoadTimeSegments()
+		{
+			var timeSegments = _repository.LoadTimeSegments(SelectedActivity.Id, new SystemDateTime(DateRangeStart?.DateTime), new SystemDateTime(DateTime.MaxValue));
+			SelectedActivity.ObservableTimeSegments.Clear();
+			foreach (var timeSegment in timeSegments)
+			{
+				SelectedActivity.ObservableTimeSegments.Add(new TimeSegmentViewModel(timeSegment, new ValidationMessageViewModel()));
 			}
 		}
 
@@ -183,6 +194,8 @@ namespace TimeTortoise.ViewModel
 				{
 					IsTimeSegmentDeleteEnabled = true;
 					SelectedTimeSegment = SelectedActivity.GetTimeSegment(_selectedTimeSegmentIndex);
+					SelectedTimeSegmentStartTime = SelectedTimeSegment.StartTime;
+					SelectedTimeSegmentEndTime = SelectedTimeSegment.EndTime;
 				}
 			}
 		}
@@ -199,7 +212,9 @@ namespace TimeTortoise.ViewModel
 			get => _selectedTimeSegment == null ? string.Empty : _selectedTimeSegment.StartTime;
 			set
 			{
-				if (_selectedTimeSegment != null) SelectedTimeSegment.StartTime = value;
+				if (_selectedTimeSegment == null) return;
+				SelectedTimeSegment.StartTime = value;
+				RaisePropertyChanged("SelectedTimeSegmentStartTime");
 			}
 		}
 
@@ -208,7 +223,9 @@ namespace TimeTortoise.ViewModel
 			get => _selectedTimeSegment == null ? string.Empty : _selectedTimeSegment.EndTime;
 			set
 			{
-				if (_selectedTimeSegment != null) SelectedTimeSegment.EndTime = value;
+				if (_selectedTimeSegment == null) return;
+				SelectedTimeSegment.EndTime = value;
+				RaisePropertyChanged("SelectedTimeSegmentEndTime");
 			}
 		}
 
@@ -216,6 +233,17 @@ namespace TimeTortoise.ViewModel
 		{
 			var selectedTimeSegment = SelectedTimeSegment;
 			SelectedActivity.RemoveTimeSegment(_repository, selectedTimeSegment);
+		}
+
+		private DateTimeOffset? _dateRangeStart;
+		public DateTimeOffset? DateRangeStart
+		{
+			get => _dateRangeStart;
+			set
+			{
+				SetProperty(ref _dateRangeStart, value);
+				LoadTimeSegments();
+			}
 		}
 	}
 }

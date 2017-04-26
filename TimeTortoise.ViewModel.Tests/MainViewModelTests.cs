@@ -2,58 +2,24 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+
 using Xunit;
 using Moq;
+
 using TimeTortoise.DAL;
 using TimeTortoise.Model;
+using TimeTortoise.TestHelper;
 
 namespace TimeTortoise.ViewModel.Tests
 {
 	public class MainViewModelTests
 	{
-		public static List<Activity> GetActivities()
-		{
-			var timeSegment1 = new TimeSegment
-			{
-				StartTime = new DateTime(2017, 3, 1, 10, 0, 0),
-				EndTime = new DateTime(2017, 3, 1, 11, 15, 33)
-			};
-			var timeSegment2 = new TimeSegment
-			{
-				StartTime = new DateTime(2017, 3, 1, 12, 0, 0),
-				EndTime = new DateTime(2017, 3, 1, 13, 15, 33)
-			};
-			var timeSegment3 = new TimeSegment
-			{
-				StartTime = new DateTime(2017, 3, 1, 13, 30, 0),
-				EndTime = new DateTime(2017, 3, 1, 13, 45, 33)
-			};
-			var timeSegment4 = new TimeSegment
-			{
-				StartTime = new DateTime(2017, 3, 1, 14, 0, 0),
-				EndTime = new DateTime(2017, 3, 1, 14, 16, 39)
-			};
-
-			var activity = new Activity {Name = "Activity2"};
-			activity.TimeSegments.Add(timeSegment1);
-			activity.TimeSegments.Add(timeSegment2);
-			activity.TimeSegments.Add(timeSegment3);
-			activity.TimeSegments.Add(timeSegment4);
-
-			return new List<Activity>
-			{
-				new Activity {Name = "Activity1"},
-				activity,
-				new Activity {Name = "Activity3"}
-			};
-		}
-
 		[Fact]
 		public void MainViewModel_WhenActivitiesAreLoaded_ContainsActivities()
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
@@ -72,7 +38,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
@@ -88,7 +54,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
@@ -103,7 +69,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
@@ -118,7 +84,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Assert
@@ -148,7 +114,7 @@ namespace TimeTortoise.ViewModel.Tests
 			// Arrange
 			var endTime = "3/1/2017 1:00:00 PM";
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm =
 				new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel())
 				{
@@ -202,7 +168,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
@@ -218,7 +184,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel())
 			{
 				SelectedActivityIndex = 0
@@ -237,7 +203,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
@@ -253,7 +219,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm =
 				new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel())
 				{
@@ -271,7 +237,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Assert
@@ -283,7 +249,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Assert
@@ -295,7 +261,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel()) { SelectedActivityIndex = -1 };
 
 			// Assert
@@ -307,7 +273,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel()) { SelectedTimeSegmentIndex = -1 };
 
 			// Assert
@@ -319,7 +285,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel()) { SelectedTimeSegmentIndex = 99 };
 
 			// Assert
@@ -331,7 +297,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel()) { SelectedTimeSegmentIndex = 99 };
 
 			// Assert
@@ -345,7 +311,7 @@ namespace TimeTortoise.ViewModel.Tests
 		//{
 		//	// Arrange
 		//	var mockRepository = new Mock<IRepository>();
-		//	mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+		//	mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 		//	var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 		//	// http://stackoverflow.com/a/249042/4803
 		//	var receivedEvents = new List<string>();
@@ -369,7 +335,7 @@ namespace TimeTortoise.ViewModel.Tests
 		//{
 		//	// Arrange
 		//	var mockRepository = new Mock<IRepository>();
-		//	mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+		//	mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 		//	var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 		//	var receivedEvents = new List<string>();
 		//	mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
@@ -391,7 +357,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void ActivityList_WhenActivityIsDeleted_IsUpdated()
 		{
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 			mvm.LoadActivities();
 
@@ -407,7 +373,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void Activity_WhenAddedThenDeletedThenAdded_IsValid()
 		{
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 			mvm.LoadActivities();
 
@@ -424,7 +390,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void TimeSegmentList_WhenTimeSegmentIsDeleted_IsUpdated()
 		{
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 			mvm.LoadActivities();
 
@@ -442,7 +408,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 			// http://stackoverflow.com/a/249042/4803
 			var receivedEvents = new List<string>();
@@ -469,7 +435,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
 
 			// Act
@@ -502,7 +468,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
 
 			// Act
@@ -521,7 +487,7 @@ namespace TimeTortoise.ViewModel.Tests
 			mockTime.Setup(x => x.Now).Returns(startTime);
 
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, mockTime.Object, new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
 
 			// Act
@@ -544,7 +510,7 @@ namespace TimeTortoise.ViewModel.Tests
 			mockTime.Setup(x => x.Now).Returns(startTime);
 
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, mockTime.Object, new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
 
 			// Act
@@ -570,7 +536,7 @@ namespace TimeTortoise.ViewModel.Tests
 			const string endTime = "3/1/2017 11:00:00 AM";
 
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, mockTime.Object, new ValidationMessageViewModel()) { SelectedActivityIndex = 0 };
 
 			// Act
@@ -592,7 +558,7 @@ namespace TimeTortoise.ViewModel.Tests
 			mockTime.Setup(x => x.Now).Returns(startTime);
 
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, mockTime.Object, new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
 
 			// Act
@@ -610,7 +576,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 			var receivedEvents = new List<string>();
 
@@ -634,7 +600,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var vmvm = new ValidationMessageViewModel();
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), vmvm);
 			mvm.LoadActivities();
@@ -653,7 +619,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var vmvm = new ValidationMessageViewModel();
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), vmvm);
 			mvm.LoadActivities();
@@ -672,7 +638,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var vmvm = new ValidationMessageViewModel();
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), vmvm);
 			mvm.LoadActivities();

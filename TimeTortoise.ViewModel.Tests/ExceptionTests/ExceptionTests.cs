@@ -1,8 +1,11 @@
 ﻿using System;
+
 using Moq;
-using TimeTortoise.DAL;
-using TimeTortoise.Model;
 using Xunit;
+
+using TimeTortoise.DAL;
+using TimeTortoise.TestHelper;
+using TimeTortoise.Model;
 
 namespace TimeTortoise.ViewModel.Tests.ExceptionTests
 {
@@ -18,7 +21,7 @@ namespace TimeTortoise.ViewModel.Tests.ExceptionTests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(MainViewModelTests.GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
@@ -35,7 +38,7 @@ namespace TimeTortoise.ViewModel.Tests.ExceptionTests
 		{
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(MainViewModelTests.GetActivities());
+			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
 			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act

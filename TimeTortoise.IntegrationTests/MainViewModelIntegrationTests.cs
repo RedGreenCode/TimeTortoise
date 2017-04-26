@@ -2,12 +2,11 @@
 using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using TimeTortoise.DAL;
 using TimeTortoise.Model;
 using TimeTortoise.ViewModel;
+using TimeTortoise.TestHelper;
 
 using Xunit;
 
@@ -15,30 +14,15 @@ namespace TimeTortoise.IntegrationTests
 {
 	public class MainViewModelIntegrationTests
 	{
-		// Helper methods
-		private static SqliteConnection GetConnection()
-		{
-			var connection = new SqliteConnection("DataSource=:memory:");
-			connection.Open();
-			return connection;
-		}
-
-		private static Context GetContext(SqliteConnection connection)
-		{
-			var options = new DbContextOptionsBuilder<SqliteContext>().UseSqlite(connection).Options;
-			var context = new SqliteContext(options);
-			return context;
-		}
-
 		// Integration tests
 
 		[Fact]
 		public void SelectedActivity_WhenNoActivitySelected_IsNull()
 		{
-			var connection = GetConnection();
+			var connection = Helper.GetConnection();
 			try
 			{
-				using (var context = GetContext(connection))
+				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
 					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel());
@@ -59,10 +43,10 @@ namespace TimeTortoise.IntegrationTests
 		[Fact]
 		public void ActivitiesList_WithEmptyDatabase_IsEmpty()
 		{
-			var connection = GetConnection();
+			var connection = Helper.GetConnection();
 			try
 			{
-				using (var context = GetContext(connection))
+				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
 					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel());
@@ -96,10 +80,10 @@ namespace TimeTortoise.IntegrationTests
 		[Fact]
 		public void Activity_WhenSaved_AppearsInActivityList()
 		{
-			var connection = GetConnection();
+			var connection = Helper.GetConnection();
 			try
 			{
-				using (var context = GetContext(connection))
+				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
 					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel());
@@ -122,10 +106,10 @@ namespace TimeTortoise.IntegrationTests
 		[Fact]
 		public void Activity_WhenDeleted_DisappearsFromActivityList()
 		{
-			var connection = GetConnection();
+			var connection = Helper.GetConnection();
 			try
 			{
-				using (var context = GetContext(connection))
+				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
 					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel());
@@ -157,10 +141,10 @@ namespace TimeTortoise.IntegrationTests
 		[Fact]
 		public void TimeSegment_WhenDeleted_DisappearsFromTimeSegmentList()
 		{
-			var connection = GetConnection();
+			var connection = Helper.GetConnection();
 			try
 			{
-				using (var context = GetContext(connection))
+				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
 					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel());
@@ -205,10 +189,10 @@ namespace TimeTortoise.IntegrationTests
 		[Fact]
 		public void TimeSegment_WhenSaved_HasCorrectStartAndEndTimes()
 		{
-			var connection = GetConnection();
+			var connection = Helper.GetConnection();
 			try
 			{
-				using (var context = GetContext(connection))
+				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
 					var mockTime = new Mock<IDateTime>();
@@ -239,10 +223,10 @@ namespace TimeTortoise.IntegrationTests
 		[Fact]
 		public void TimeSegment_WhenAddedAndSaved_HasCorrectStartAndEndTimes()
 		{
-			var connection = GetConnection();
+			var connection = Helper.GetConnection();
 			try
 			{
-				using (var context = GetContext(connection))
+				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
 					var mockTime = new Mock<IDateTime>();
@@ -270,10 +254,10 @@ namespace TimeTortoise.IntegrationTests
 		[Fact]
 		public void TimeSegment_WhenAddedAndDeleted_IsDeleted()
 		{
-			var connection = GetConnection();
+			var connection = Helper.GetConnection();
 			try
 			{
-				using (var context = GetContext(connection))
+				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
 					var mockTime = new Mock<IDateTime>();

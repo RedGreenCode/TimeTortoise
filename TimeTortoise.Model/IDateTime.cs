@@ -6,5 +6,6 @@ namespace TimeTortoise.Model
 	public interface IDateTime
 	{
 		DateTime Now { get; }
+		DateTime Value { get; }
 	}
 }

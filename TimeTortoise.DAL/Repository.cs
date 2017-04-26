@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using TimeTortoise.Model;
 
 namespace TimeTortoise.DAL
@@ -16,7 +16,12 @@ namespace TimeTortoise.DAL
 
 		public List<Activity> LoadActivities()
 		{
-			return _context.Activities.Include(a => a.TimeSegments).ToList();
+			return _context.Activities.ToList();
+		}
+
+		public List<TimeSegment> LoadTimeSegments(int activityId, IDateTime startTime, IDateTime endTime)
+		{
+			return _context.TimeSegments.Where(t => t.ActivityId == activityId && t.StartTime >= startTime.Value && t.EndTime <= endTime.Value).ToList();
 		}
 
 		public void AddActivity(Activity activity)
