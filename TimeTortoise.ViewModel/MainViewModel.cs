@@ -79,12 +79,25 @@ namespace TimeTortoise.ViewModel
 
 		public void LoadTimeSegments()
 		{
-			var timeSegments = _repository.LoadTimeSegments(SelectedActivity.Id, new SystemDateTime(DateRangeStart?.DateTime), new SystemDateTime(DateTime.MaxValue));
+			if (!SelectedActivityIndexIsValid())
+				throw new InvalidOperationException("Can't load time segments without first selecting an activity.");
+
+			var startDate = DateRangeStart?.DateTime ?? DateTime.MinValue;
+			var endDate = DateTime.MaxValue;
+			var timeSegments = _repository.LoadTimeSegments(SelectedActivity.Id, new SystemDateTime(startDate), new SystemDateTime(endDate));
 			SelectedActivity.ObservableTimeSegments.Clear();
+			if (timeSegments == null) return;
 			foreach (var timeSegment in timeSegments)
 			{
 				SelectedActivity.ObservableTimeSegments.Add(new TimeSegmentViewModel(timeSegment, new ValidationMessageViewModel()));
 			}
+		}
+
+		// TODO: remove
+		public void LoadAllTimeSegments()
+		{
+			var allTimeSegments = _repository.LoadAllTimeSegments();
+			var c = allTimeSegments.Count;
 		}
 
 		public void Save()
@@ -127,6 +140,7 @@ namespace TimeTortoise.ViewModel
 				throw new InvalidOperationException("Can't add a time segment without first selecting an activity.");
 			var ts = new TimeSegment
 			{
+				ActivityId = SelectedActivity.Id,
 				StartTime = new DateTime(_dateTime.Now.Ticks),
 				EndTime = new DateTime(_dateTime.Now.Ticks)
 			};
@@ -185,7 +199,16 @@ namespace TimeTortoise.ViewModel
 			{
 				SetProperty(ref _selectedTimeSegmentIndex, value);
 
-				if (_selectedTimeSegmentIndex < 0 || SelectedActivity == null || _selectedTimeSegmentIndex >= SelectedActivity.NumTimeSegments)
+				var numTimeSegments = SelectedActivity?.NumTimeSegments ?? -1;
+				if (_selectedTimeSegmentIndex >= 0)
+				{
+					if (!SelectedActivityIndexIsValid())
+						throw new InvalidOperationException("Can't select a time segment without first selecting an activity.");
+					if (_selectedTimeSegmentIndex >= numTimeSegments)
+						throw new IndexOutOfRangeException($"Selected time segment index {_selectedTimeSegmentIndex} is outside the range {numTimeSegments} of the time segment list.");
+				}
+
+				if (_selectedTimeSegmentIndex < 0)
 				{
 					IsTimeSegmentDeleteEnabled = false;
 					SelectedTimeSegment = null;

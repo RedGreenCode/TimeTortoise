@@ -8,6 +8,7 @@ namespace TimeTortoise.DAL
 	{
 		List<Activity> LoadActivities();
 		List<TimeSegment> LoadTimeSegments(int activityId, IDateTime startTime, IDateTime endTime);
+		List<TimeSegment> LoadAllTimeSegments();
 		void AddActivity(Activity activity);
 		void SaveActivity();
 		void DeleteActivity(Activity activity);

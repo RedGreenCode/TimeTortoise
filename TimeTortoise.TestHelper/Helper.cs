@@ -25,40 +25,48 @@ namespace TimeTortoise.TestHelper
 			return context;
 		}
 
-		public static List<Activity> GetActivities()
+		public static List<TimeSegment> GetTimeSegments()
 		{
-			var timeSegment1 = new TimeSegment
+			var timeSegments = new List<TimeSegment>
 			{
-				StartTime = new DateTime(2017, 3, 1, 10, 0, 0),
-				EndTime = new DateTime(2017, 3, 1, 11, 15, 33)
-			};
-			var timeSegment2 = new TimeSegment
-			{
-				StartTime = new DateTime(2017, 3, 1, 12, 0, 0),
-				EndTime = new DateTime(2017, 3, 1, 13, 15, 33)
-			};
-			var timeSegment3 = new TimeSegment
-			{
-				StartTime = new DateTime(2017, 3, 1, 13, 30, 0),
-				EndTime = new DateTime(2017, 3, 1, 13, 45, 33)
-			};
-			var timeSegment4 = new TimeSegment
-			{
-				StartTime = new DateTime(2017, 3, 1, 14, 0, 0),
-				EndTime = new DateTime(2017, 3, 1, 14, 16, 39)
+				new TimeSegment
+				{
+					StartTime = new DateTime(2017, 3, 1, 10, 0, 0),
+					EndTime = new DateTime(2017, 3, 1, 11, 15, 33)
+				},
+				new TimeSegment
+				{
+					StartTime = new DateTime(2017, 3, 1, 12, 0, 0),
+					EndTime = new DateTime(2017, 3, 1, 13, 15, 33)
+				},
+				new TimeSegment
+				{
+					StartTime = new DateTime(2017, 3, 1, 13, 30, 0),
+					EndTime = new DateTime(2017, 3, 1, 13, 45, 33)
+				},
+				new TimeSegment
+				{
+					StartTime = new DateTime(2017, 3, 1, 14, 0, 0),
+					EndTime = new DateTime(2017, 3, 1, 14, 16, 39)
+				}
 			};
 
-			var activity = new Activity { Name = "Activity2" };
-			activity.TimeSegments.Add(timeSegment1);
-			activity.TimeSegments.Add(timeSegment2);
-			activity.TimeSegments.Add(timeSegment3);
-			activity.TimeSegments.Add(timeSegment4);
+			return timeSegments;
+		}
+
+		public static List<Activity> GetActivities()
+		{
+
+			var activity = new Activity { Id = 1, Name = "Activity2" };
+			var timeSegments = GetTimeSegments();
+			foreach (var timeSegment in timeSegments)
+				activity.TimeSegments.Add(timeSegment);
 
 			return new List<Activity>
 			{
-				new Activity {Name = "Activity1"},
+				new Activity {Id = 0, Name = "Activity1"},
 				activity,
-				new Activity {Name = "Activity3"}
+				new Activity {Id = 2, Name = "Activity3"}
 			};
 		}
 	}

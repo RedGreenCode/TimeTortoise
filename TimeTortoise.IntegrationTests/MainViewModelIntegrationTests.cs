@@ -280,5 +280,45 @@ namespace TimeTortoise.IntegrationTests
 				connection.Close();
 			}
 		}
+
+		//[Fact]
+		//public void TimeSegmentList_WhenStartTimeIsSpecified_ShowsCorrectTimeSegments()
+		//{
+		//	var connection = Helper.GetConnection();
+		//	try
+		//	{
+		//		using (var context = Helper.GetContext(connection))
+		//		{
+		//			// Arrange
+		//			var mockTime = new Mock<IDateTime>();
+		//			var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
+		//			mockTime.Setup(x => x.Now).Returns(startTime);
+		//			var mvm = new MainViewModel(new Repository(context), mockTime.Object, new ValidationMessageViewModel());
+
+		//			// Act
+		//			mvm.AddActivity();
+		//			mvm.Save();
+		//			mvm.AddTimeSegment();
+		//			Assert.Equal(1, mvm.Activities[0].ObservableTimeSegments.Count);
+		//			startTime = new DateTime(2017, 3, 2, 10, 0, 0);
+		//			mockTime.Setup(x => x.Now).Returns(startTime);
+		//			mvm.AddTimeSegment();
+
+		//			// Assert
+		//			//Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.Activities[0].ObservableTimeSegments[0].StartTime);
+		//			Assert.Equal(2, mvm.Activities[0].ObservableTimeSegments.Count);
+
+		//			mvm.LoadTimeSegments();
+		//			mvm.LoadAllTimeSegments();
+		//			Assert.Equal(2, mvm.Activities[0].ObservableTimeSegments.Count);
+		//			mvm.DateRangeStart = new DateTime(2017, 3, 2, 9, 0, 0);
+		//			Assert.Equal(1, mvm.Activities[0].ObservableTimeSegments.Count);
+		//		}
+		//	}
+		//	finally
+		//	{
+		//		connection.Close();
+		//	}
+		//}
 	}
 }
