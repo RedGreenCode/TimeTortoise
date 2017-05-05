@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
+using Moq;
+
 using TimeTortoise.DAL;
 using TimeTortoise.Model;
 
@@ -10,7 +12,6 @@ namespace TimeTortoise.TestHelper
 {
 	public static class Helper
 	{
-		// Helper methods
 		public static SqliteConnection GetConnection()
 		{
 			var connection = new SqliteConnection("DataSource=:memory:");
@@ -25,7 +26,20 @@ namespace TimeTortoise.TestHelper
 			return context;
 		}
 
-		public static List<TimeSegment> GetTimeSegments()
+		public static IRepository GetMockRepositoryObject()
+		{
+			return GetMockRepository().Object;
+		}
+
+		public static Mock<IRepository> GetMockRepository()
+		{
+			var mockRepository = new Mock<IRepository>();
+			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
+			mockRepository.Setup(x => x.LoadTimeSegments(1, It.IsAny<IDateTime>(), It.IsAny<IDateTime>())).Returns(GetTimeSegments());
+			return mockRepository;
+		}
+
+		private static List<TimeSegment> GetTimeSegments()
 		{
 			var timeSegments = new List<TimeSegment>
 			{

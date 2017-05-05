@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TimeTortoise.Model;
 
@@ -24,10 +23,6 @@ namespace TimeTortoise.DAL
 			return _context.TimeSegments.Where(t => t.ActivityId == activityId && t.StartTime >= startTime.Value && t.EndTime <= endTime.Value).ToList();
 		}
 
-		public List<TimeSegment> LoadAllTimeSegments()
-		{
-			return _context.TimeSegments.ToList();
-		}
 		public void AddActivity(Activity activity)
 		{
 			_context.Add(activity);

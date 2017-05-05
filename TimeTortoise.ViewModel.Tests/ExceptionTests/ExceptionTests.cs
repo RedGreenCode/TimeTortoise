@@ -64,5 +64,21 @@ namespace TimeTortoise.ViewModel.Tests.ExceptionTests
 			Assert.NotNull(exception);
 			Assert.IsType<InvalidOperationException>(exception);
 		}
+
+		[Fact]
+		public void SetSelectedTimeSegmentIndex_WhenSelectedTimeSegmentIndexIsInvalid_Throws()
+		{
+			// Arrange
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
+			{
+				SelectedActivityIndex = 1,
+				SelectedTimeSegmentIndex = 0
+			};
+
+			// Act/Assert
+			var exception = Record.Exception(() => mvm.SelectedTimeSegmentIndex = mvm.SelectedActivity.NumTimeSegments);
+			Assert.NotNull(exception);
+			Assert.IsType<IndexOutOfRangeException>(exception);
+		}
 	}
 }

@@ -82,7 +82,7 @@ namespace TimeTortoise.ViewModel
 			if (!SelectedActivityIndexIsValid())
 				throw new InvalidOperationException("Can't load time segments without first selecting an activity.");
 
-			var startDate = DateRangeStart?.DateTime ?? DateTime.MinValue;
+			var startDate = DateRangeStart?.DateTime;
 			var endDate = DateTime.MaxValue;
 			var timeSegments = _repository.LoadTimeSegments(SelectedActivity.Id, new SystemDateTime(startDate), new SystemDateTime(endDate));
 			SelectedActivity.ObservableTimeSegments.Clear();
@@ -91,13 +91,6 @@ namespace TimeTortoise.ViewModel
 			{
 				SelectedActivity.ObservableTimeSegments.Add(new TimeSegmentViewModel(timeSegment, new ValidationMessageViewModel()));
 			}
-		}
-
-		// TODO: remove
-		public void LoadAllTimeSegments()
-		{
-			var allTimeSegments = _repository.LoadAllTimeSegments();
-			var c = allTimeSegments.Count;
 		}
 
 		public void Save()
@@ -152,6 +145,7 @@ namespace TimeTortoise.ViewModel
 		public void DeleteActivity()
 		{
 			var selectedActivity = SelectedActivity;
+			selectedActivity.ClearAllTimeSegments();
 			Activities.Remove(selectedActivity);
 			_repository.DeleteActivity(selectedActivity);
 		}
@@ -197,15 +191,20 @@ namespace TimeTortoise.ViewModel
 			get => _selectedTimeSegmentIndex;
 			set
 			{
+				if (SelectedActivity == null)
+				{
+					IsTimeSegmentDeleteEnabled = false;
+					SelectedTimeSegment = null;
+					return;
+				}
+
 				SetProperty(ref _selectedTimeSegmentIndex, value);
 
-				var numTimeSegments = SelectedActivity?.NumTimeSegments ?? -1;
+				var numTimeSegments = SelectedActivity.NumTimeSegments;
 				if (_selectedTimeSegmentIndex >= 0)
 				{
-					if (!SelectedActivityIndexIsValid())
-						throw new InvalidOperationException("Can't select a time segment without first selecting an activity.");
 					if (_selectedTimeSegmentIndex >= numTimeSegments)
-						throw new IndexOutOfRangeException($"Selected time segment index {_selectedTimeSegmentIndex} is outside the range {numTimeSegments} of the time segment list.");
+						throw new IndexOutOfRangeException($"Selected time segment index is {_selectedTimeSegmentIndex}, but there are only {numTimeSegments} time segments.");
 				}
 
 				if (_selectedTimeSegmentIndex < 0)
@@ -265,7 +264,8 @@ namespace TimeTortoise.ViewModel
 			set
 			{
 				SetProperty(ref _dateRangeStart, value);
-				LoadTimeSegments();
+				if (SelectedActivityIndexIsValid())
+					LoadTimeSegments();
 			}
 		}
 	}

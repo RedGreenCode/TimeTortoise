@@ -6,7 +6,6 @@ using System.Globalization;
 using Xunit;
 using Moq;
 
-using TimeTortoise.DAL;
 using TimeTortoise.Model;
 using TimeTortoise.TestHelper;
 
@@ -14,24 +13,11 @@ namespace TimeTortoise.ViewModel.Tests
 {
 	public class MainViewModelTests
 	{
-		private static IRepository GetMockRepositoryObject()
-		{
-			return GetMockRepository().Object;
-		}
-
-		private static Mock<IRepository> GetMockRepository()
-		{
-			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
-			mockRepository.Setup(x => x.LoadTimeSegments(1, It.IsAny<IDateTime>(), It.IsAny<IDateTime>())).Returns(Helper.GetTimeSegments());
-			return mockRepository;
-		}
-
 		[Fact]
 		public void MainViewModel_WhenActivitiesAreLoaded_ContainsActivities()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
 			mvm.LoadActivities();
@@ -48,7 +34,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void MainViewModel_WhenActivitiesAndTimeSegmentsAreLoaded_ActivityContainsTimeSegments()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
 			mvm.LoadActivities();
@@ -63,7 +49,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void SelectedActivity_WhenNoActivityIsSelected_IsNull()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
 			var avm = mvm.SelectedActivity;
@@ -76,7 +62,45 @@ namespace TimeTortoise.ViewModel.Tests
 		public void SelectedTimeSegment_WhenNoTimeSegmentIsSelected_IsNull()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+
+			// Act
+			var tvm = mvm.SelectedTimeSegment;
+
+			// Assert
+			Assert.Equal(null, tvm);
+		}
+
+		[Fact]
+		public void SetSelectedTimeSegment_WhenSelectedTimeSegmentIndexIsInvalid_SetsSelectedTimeSegmentToNull()
+		{
+			// Arrange
+			var mvm =
+				new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
+				{
+					SelectedActivityIndex = 1,
+					SelectedTimeSegmentIndex = 0
+				};
+			var tvm = mvm.SelectedTimeSegment;
+			Assert.NotEqual(null, tvm);
+
+			// Act
+			mvm.SelectedTimeSegmentIndex = -1;
+			tvm = mvm.SelectedTimeSegment;
+
+			// Assert
+			Assert.Equal(null, tvm);
+		}
+
+		[Fact]
+		public void SelectedTimeSegment_WhenNoActivityIsSelected_IsNull()
+		{
+			// Arrange
+			var mvm =
+				new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
+				{
+					SelectedTimeSegmentIndex = 1
+				};
 
 			// Act
 			var tvm = mvm.SelectedTimeSegment;
@@ -89,7 +113,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void SelectedTimeSegmentStartAndEndTimes_WhenNoTimeSegmentIsSelected_AreEmpty()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Assert
 			Assert.Equal(string.Empty, mvm.SelectedTimeSegmentStartTime);
@@ -100,7 +124,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void SelectedActivity_WhenNameIsUpdated_IsUpdatedInActivityList()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
 			mvm.AddActivity();
@@ -116,7 +140,7 @@ namespace TimeTortoise.ViewModel.Tests
 			// Arrange
 			var endTime = "3/1/2017 1:00:00 PM";
 			var mvm =
-				new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
+				new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
 				{
 					SelectedActivityIndex = 1,
 					SelectedTimeSegmentIndex = 0,
@@ -132,7 +156,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void SelectedActivityIndex_WhenNewActivityIsAdded_PointsToNewActivity()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
 			mvm.AddActivity();
@@ -146,7 +170,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void SelectedTimeSegment_WhenNewTimeSegmentIsAdded_PointsToNewTimeSegment()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 			mvm.AddActivity();
 
 			// Act
@@ -163,7 +187,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void IsSaveEnabled_WhenNewActivityIsAdded_SwitchesToTrue()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
 			Assert.Equal(false, mvm.IsSaveEnabled);
@@ -177,7 +201,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void IsTimeSegmentDeleteEnabled_WhenNewTimeSegmentIsAdded_SwitchesToTrue()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
 			{
 				SelectedActivityIndex = 0
 			};
@@ -194,7 +218,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void IsTimeSegmentAddEnabled_WhenActivityIsSelected_SwitchesToTrue()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Act
 			Assert.Equal(false, mvm.IsTimeSegmentAddEnabled);
@@ -209,7 +233,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mvm =
-				new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
+				new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
 				{
 					SelectedActivityIndex = 1,
 					SelectedTimeSegmentIndex = 3
@@ -224,7 +248,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void IsSaveEnabled_WhenSelectedActivityIndexIsOutOfRangeLow1_IsFalse()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Assert
 			Assert.Equal(false, mvm.IsSaveEnabled);
@@ -234,7 +258,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void SaveAndDeleteButtons_WhenSelectedTimeSegmentIndexIsOutOfRangeLow1_AreDisabled()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 
 			// Assert
 			Assert.Equal(false, mvm.IsSaveEnabled);
@@ -244,7 +268,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void IsSaveEnabled_WhenSelectedActivityIndexIsOutOfRangeLow2_IsFalse()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel()) { SelectedActivityIndex = -1 };
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel()) { SelectedActivityIndex = -1 };
 
 			// Assert
 			Assert.Equal(false, mvm.IsSaveEnabled);
@@ -254,7 +278,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void IsSaveEnabled_WhenSelectedTimeSegmentIndexIsOutOfRangeLow2_IsFalse()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel()) { SelectedTimeSegmentIndex = -1 };
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel()) { SelectedTimeSegmentIndex = -1 };
 
 			// Assert
 			Assert.Equal(false, mvm.IsSaveEnabled);
@@ -264,76 +288,16 @@ namespace TimeTortoise.ViewModel.Tests
 		public void IsSaveEnabled_WhenSelectedActivityIndexIsOutOfRangeHigh_IsFalse()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel()) { SelectedActivityIndex = 99 };
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel()) { SelectedActivityIndex = 99 };
 
 			// Assert
 			Assert.Equal(false, mvm.IsSaveEnabled);
 		}
 
-		// TODO: Code throws an exception now instead
-		//[Fact]
-		//public void IsSaveEnabled_WhenSelectedTimeSegmentIndexIsOutOfRangeHigh_IsFalse()
-		//{
-		//	// Arrange
-		//	var mvm = new MainViewModel(GetMockRepository(), new SystemDateTime(), new ValidationMessageViewModel()) { SelectedTimeSegmentIndex = 99 };
-
-		//	// Assert
-		//	Assert.Equal(false, mvm.IsSaveEnabled);
-		//}
-
-		// This test passes even when mvm.SelectedActivity.Name is not changed. All of the events
-		// are firing due to mvm.AddActivity().
-		//[Fact]
-		//public void ActivityName_WhenChanged_FiresCorrectEvents()
-		//{
-		//	// Arrange
-		//	
-		//	
-		//	var mvm = new MainViewModel(GetMockRepository(), new SystemDateTime(), new ValidationMessageViewModel());
-		//	// http://stackoverflow.com/a/249042/4803
-		//	var receivedEvents = new List<string>();
-		//	mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
-		//	{
-		//		receivedEvents.Add(e.PropertyName);
-		//	};
-
-		//	// Act
-		//	mvm.AddActivity();
-		//	//mvm.SelectedActivity.Name = "TestName1";
-
-		//	// Assert
-		//	Assert.Equal("SelectedActivityIndex", receivedEvents[0]);
-		//	Assert.Equal("IsSaveEnabled", receivedEvents[1]);
-		//	Assert.Equal("SelectedActivity", receivedEvents[2]);
-		//}
-
-		//[Fact]
-		//public void TimeSegmentEndTime_WhenChanged_FiresCorrectEvents()
-		//{
-		//	// Arrange
-		//	
-		//	
-		//	var mvm = new MainViewModel(GetMockRepository(), new SystemDateTime(), new ValidationMessageViewModel());
-		//	var receivedEvents = new List<string>();
-		//	mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
-		//	{
-		//		receivedEvents.Add(e.PropertyName);
-		//	};
-
-		//	// Act
-		//	mvm.AddActivity();
-		//	mvm.SelectedTimeSegment.EndTime = "3/1/2017 1:00:00 PM";
-
-		//	// Assert
-		//	Assert.Equal("SelectedActivityIndex", receivedEvents[0]);
-		//	Assert.Equal("IsSaveEnabled", receivedEvents[1]);
-		//	Assert.Equal("SelectedActivity", receivedEvents[2]);
-		//}
-
 		[Fact]
 		public void ActivityList_WhenActivityIsDeleted_IsUpdated()
 		{
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 			mvm.LoadActivities();
 
 			// Act
@@ -347,7 +311,7 @@ namespace TimeTortoise.ViewModel.Tests
 		[Fact]
 		public void Activity_WhenAddedThenDeletedThenAdded_IsValid()
 		{
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 			mvm.LoadActivities();
 
 			// Act
@@ -362,7 +326,7 @@ namespace TimeTortoise.ViewModel.Tests
 		[Fact]
 		public void TimeSegmentList_WhenTimeSegmentIsDeleted_IsUpdated()
 		{
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 			mvm.LoadActivities();
 
 			// Act
@@ -378,7 +342,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void ActivityName_WhenDeleted_FiresCorrectEvents()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 			// http://stackoverflow.com/a/249042/4803
 			var receivedEvents = new List<string>();
 			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
@@ -403,7 +367,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void StartStopButton_WhenPressed_TogglesButtonText()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
 
 			// Act
 			mvm.StartStop();
@@ -434,7 +398,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void TimeSegments_WhenTimingStarts_HasOneEntry()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
 
 			// Act
 			mvm.StartStop();
@@ -451,7 +415,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
 			mockTime.Setup(x => x.Now).Returns(startTime);
 
-			var mvm = new MainViewModel(GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
 
 			// Act
 			mvm.StartStop();
@@ -472,7 +436,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
 			mockTime.Setup(x => x.Now).Returns(startTime);
 
-			var mvm = new MainViewModel(GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel()) {SelectedActivityIndex = 0};
 
 			// Act
 			mvm.StartStop();
@@ -496,7 +460,7 @@ namespace TimeTortoise.ViewModel.Tests
 			const string startTime = "3/1/2017 10:00:00 AM";
 			const string endTime = "3/1/2017 11:00:00 AM";
 
-			var mvm = new MainViewModel(GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel()) { SelectedActivityIndex = 0 };
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel()) { SelectedActivityIndex = 0 };
 
 			// Act
 			mvm.AddTimeSegment();
@@ -512,7 +476,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void TimeSegment_WhenTimingEnds_IsSaved()
 		{
 			// Arrange
-			var mockRepository = GetMockRepository();
+			var mockRepository = Helper.GetMockRepository();
 			var mockTime = new Mock<IDateTime>();
 			var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
 			mockTime.Setup(x => x.Now).Returns(startTime);
@@ -533,7 +497,7 @@ namespace TimeTortoise.ViewModel.Tests
 		public void TimeSegmentList_WhenTimerStops_UpdatesUI()
 		{
 			// Arrange
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
 			var receivedEvents = new List<string>();
 
 			// Act
@@ -551,29 +515,12 @@ namespace TimeTortoise.ViewModel.Tests
 			Assert.Equal("Replace", receivedEvents[1]);
 		}
 
-		// moved to integration tests
-		//[Fact]
-		//public void TimeSegmentList_WhenStartTimeIsSpecified_ShowsCorrectTimeSegments()
-		//{
-		//	// Arrange
-		//	var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
-
-		//	// Act
-		//	mvm.LoadActivities();
-		//	mvm.SelectedActivityIndex = 1;
-		//	mvm.DateRangeStart = new DateTimeOffset(new DateTime(2017, 3, 1, 14, 0, 0));
-		//	mvm.LoadTimeSegments();
-
-		//	// Assert
-		//	Assert.Equal(1, mvm.SelectedActivity.NumTimeSegments);
-		//}
-
 		[Fact]
 		public void ValidationMessage_WhenStartTimeIsValid_IsEmpty()
 		{
 			// Arrange
 			var vmvm = new ValidationMessageViewModel();
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), vmvm);
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), vmvm);
 			mvm.LoadActivities();
 
 			// Act
@@ -590,7 +537,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var vmvm = new ValidationMessageViewModel();
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), vmvm);
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), vmvm);
 			mvm.LoadActivities();
 
 			// Act
@@ -607,7 +554,7 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var vmvm = new ValidationMessageViewModel();
-			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), vmvm);
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), vmvm);
 			mvm.LoadActivities();
 
 			// Act
@@ -617,6 +564,35 @@ namespace TimeTortoise.ViewModel.Tests
 
 			// Assert
 			Assert.Equal("Please enter a valid end date and time.\r\n", vmvm.ValidationMessages);
+		}
+
+		[Fact]
+		public void SelectedTimeSegmentStartTime_WhenNoTimeSegmentIsSelected_DoesntThrow()
+		{
+			// Arrange/Act
+			var mvm =
+				new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
+				{
+					SelectedTimeSegmentStartTime = string.Empty
+				};
+
+			// Assert
+			Assert.Equal(null, mvm.SelectedTimeSegment);
+		}
+
+
+		[Fact]
+		public void SelectedTimeSegmentEndTime_WhenNoTimeSegmentIsSelected_DoesntThrow()
+		{
+			// Arrange/Act
+			var mvm =
+				new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
+				{
+					SelectedTimeSegmentEndTime = string.Empty
+				};
+
+			// Assert
+			Assert.Equal(null, mvm.SelectedTimeSegment);
 		}
 	}
 }

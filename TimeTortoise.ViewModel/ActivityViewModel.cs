@@ -18,7 +18,7 @@ namespace TimeTortoise.ViewModel
 			set { SetProperty(() => This.Name = value); }
 		}
 
-		public ObservableCollection<TimeSegmentViewModel> ObservableTimeSegments = new ObservableCollection<TimeSegmentViewModel>();
+		public readonly ObservableCollection<TimeSegmentViewModel> ObservableTimeSegments = new ObservableCollection<TimeSegmentViewModel>();
 
 		internal void AddTimeSegment(TimeSegmentViewModel tsvm)
 		{
@@ -45,6 +45,11 @@ namespace TimeTortoise.ViewModel
 		{
 			ObservableTimeSegments.Remove(tsvm);
 			repository.DeleteTimeSegment(tsvm.TimeSegment);
+		}
+
+		internal void ClearAllTimeSegments()
+		{
+			ObservableTimeSegments.Clear();
 		}
 
 		public int NumObservableTimeSegments => ObservableTimeSegments.Count;
