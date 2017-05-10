@@ -46,6 +46,45 @@ namespace TimeTortoise.ViewModel.Tests
 		}
 
 		[Fact]
+		public void TimeSegmentList_WhenTimingIsStarted_ContainsStartedTimeSegment()
+		{
+			// Arrange
+			var mockRepository = Helper.GetMockRepository();
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+
+			// Act
+			mvm.LoadActivities();
+			mvm.SelectedActivityIndex = 1;
+			mvm.LoadTimeSegments();
+			mvm.StartStop();
+			var ots = mvm.SelectedActivity.ObservableTimeSegments;
+			var startedTimeSegment = ots[ots.Count - 1];
+			mockRepository.Setup(x => x.LoadTimeSegments(1, It.IsAny<IDateTime>(), It.IsAny<IDateTime>())).Returns(
+				new List<TimeSegment>
+				{
+					new TimeSegment
+					{
+						ActivityId =  startedTimeSegment.TimeSegment.ActivityId,
+						StartTime = startedTimeSegment.TimeSegment.StartTime,
+						EndTime = startedTimeSegment.TimeSegment.EndTime
+					}
+				});
+			mvm.LoadTimeSegments();
+			ots = mvm.SelectedActivity.ObservableTimeSegments;
+			startedTimeSegment = ots[ots.Count - 1];
+
+			// Assert
+			Assert.Equal(startedTimeSegment, mvm.StartedTimeSegment);
+
+			// Act
+			mvm.StartStop();
+			mvm.LoadTimeSegments();
+
+			// Assert
+			Assert.NotEqual(startedTimeSegment, mvm.StartedTimeSegment);
+		}
+
+		[Fact]
 		public void SelectedActivity_WhenNoActivityIsSelected_IsNull()
 		{
 			// Arrange
@@ -490,7 +529,7 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.StartStop();
 
 			// Assert
-			mockRepository.Verify(x => x.SaveActivity());
+			mockRepository.Verify(x => x.SaveChanges());
 		}
 
 		[Fact]

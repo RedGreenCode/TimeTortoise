@@ -25,7 +25,7 @@
 		<ListView 
 			ItemsSource="{x:Bind Main.SelectedActivity.ObservableTimeSegments, Mode=OneWay}"
 			SelectedIndex="{x:Bind Main.SelectedTimeSegmentIndex, Mode=TwoWay}"
-			HorizontalAlignment="Left" Height="207" Margin="555,29,0,0" VerticalAlignment="Top" Width="630">
+			HorizontalAlignment="Left" Height="207" Margin="631,29,0,0" VerticalAlignment="Top" Width="630">
 
 			<ListView.ItemTemplate>
 				<DataTemplate x:DataType="viewModel:TimeSegmentViewModel">
@@ -58,24 +58,27 @@
 		<Button Click="{x:Bind StartStop}"
 				Content="{x:Bind Main.StartStopText, Mode=OneWay}"
 				IsEnabled="{x:Bind Main.IsSaveEnabled, Mode=OneWay}"  
-				HorizontalAlignment="Left" Margin="441,251,0,0" VerticalAlignment="Top"/>
+				HorizontalAlignment="Left" Margin="517,251,0,0" VerticalAlignment="Top"/>
 		<TextBox Text="{x:Bind Main.SelectedTimeSegmentStartTime, Mode=TwoWay}"
-			HorizontalAlignment="Left" Margin="554,251,0,0" VerticalAlignment="Top" Width="230"/>
+			HorizontalAlignment="Left" Margin="630,251,0,0" VerticalAlignment="Top" Width="230"/>
 		<TextBox Text="{x:Bind Main.SelectedTimeSegmentEndTime, Mode=TwoWay}"
-			HorizontalAlignment="Left" Margin="816,251,0,0" VerticalAlignment="Top" Width="230"/>
-		<TextBlock HorizontalAlignment="Left" Margin="555,366,0,0" TextWrapping="Wrap"
+			HorizontalAlignment="Left" Margin="892,251,0,0" VerticalAlignment="Top" Width="230"/>
+		<TextBlock HorizontalAlignment="Left" Margin="631,366,0,0" TextWrapping="Wrap"
 				   Text="{x:Bind ValidationMessage.ValidationMessages, Mode=TwoWay}"
 				   VerticalAlignment="Top" Height="73" Width="630"/>
 		<Button Click="{x:Bind Main.AddTimeSegment}"
 				Content="Add"
 				IsEnabled="{x:Bind Main.IsTimeSegmentAddEnabled, Mode=OneWay}"  
-				HorizontalAlignment="Left" Margin="555,298,0,0" VerticalAlignment="Top"/>
+				HorizontalAlignment="Left" Margin="631,298,0,0" VerticalAlignment="Top"/>
 		<Button Click="{x:Bind Main.DeleteTimeSegment}"
 				Content="Delete"
 				IsEnabled="{x:Bind Main.IsTimeSegmentDeleteEnabled, Mode=OneWay}"  
-				HorizontalAlignment="Left" Margin="638,300,0,0" VerticalAlignment="Top"/>
-        <CalendarDatePicker 
-            Date="{x:Bind Main.DateRangeStart, Mode=TwoWay}"
-            HorizontalAlignment="Left" Margin="555,466,0,0" VerticalAlignment="Top"/>
-    </Grid>
+				HorizontalAlignment="Left" Margin="714,300,0,0" VerticalAlignment="Top"/>
+		<CalendarDatePicker 
+			Date="{x:Bind Main.DateRangeStart, Mode=TwoWay}"
+			HorizontalAlignment="Left" Margin="631,466,0,0" VerticalAlignment="Top"/>
+		<TextBlock Name="StartedActivity" HorizontalAlignment="Left" Margin="138,390,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"/>
+		<TextBlock Name="StartedTimeSegmentStartTime" HorizontalAlignment="Left" Margin="325,390,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166"/>
+		<TextBlock Name="StartedTimeSegmentDuration" HorizontalAlignment="Left" Margin="508,390,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60"/>
+	</Grid>
 </Page>

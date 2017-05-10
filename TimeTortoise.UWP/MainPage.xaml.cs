@@ -20,12 +20,22 @@ namespace TimeTortoise.UWP
 
 		private void dispatcherTimer_Tick(object sender, object e)
 		{
-			Main.SelectedTimeSegmentEndTime = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+			if (Main.StartedActivity == null)
+			{
+				StartedActivity.Text = string.Empty;
+				StartedTimeSegmentStartTime.Text = string.Empty;
+				StartedTimeSegmentDuration.Text = string.Empty;
+				return;
+			}
+			StartedActivity.Text = Main.StartedActivity.Name ?? string.Empty;
+			Main.StartedTimeSegment.EndTime = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+			StartedTimeSegmentStartTime.Text = Main.StartedTimeSegment.StartTime;
+			StartedTimeSegmentDuration.Text = Main.StartedTimeSegment.Duration;
 		}
 
 		private void StartStop()
 		{
-			if (_dispatcherTimer.IsEnabled) _dispatcherTimer.Stop();
+			if (Main.StartedTimeSegment != null) _dispatcherTimer.Stop();
 			else _dispatcherTimer.Start();
 			Main.StartStop();
 		}

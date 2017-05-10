@@ -50,6 +50,7 @@ namespace TimeTortoise.ViewModel
 					IsSaveEnabled = true;
 					IsTimeSegmentAddEnabled = true;
 					SelectedActivity = Activities[_selectedActivityIndex];
+					Save();
 					LoadTimeSegments();
 				}
 			}
@@ -83,19 +84,24 @@ namespace TimeTortoise.ViewModel
 				throw new InvalidOperationException("Can't load time segments without first selecting an activity.");
 
 			var startDate = DateRangeStart?.DateTime;
+			if (startDate.HasValue)
+				startDate = new DateTime(startDate.Value.Year, startDate.Value.Month, startDate.Value.Day);
 			var endDate = DateTime.MaxValue;
 			var timeSegments = _repository.LoadTimeSegments(SelectedActivity.Id, new SystemDateTime(startDate), new SystemDateTime(endDate));
 			SelectedActivity.ObservableTimeSegments.Clear();
 			if (timeSegments == null) return;
 			foreach (var timeSegment in timeSegments)
 			{
-				SelectedActivity.ObservableTimeSegments.Add(new TimeSegmentViewModel(timeSegment, new ValidationMessageViewModel()));
+				var tsvm = new TimeSegmentViewModel(timeSegment, new ValidationMessageViewModel());
+				if (StartedTimeSegment != null && StartedTimeSegment.TimeSegment.StartTime == timeSegment.StartTime)
+					tsvm = StartedTimeSegment;
+				SelectedActivity.ObservableTimeSegments.Add(tsvm);
 			}
 		}
 
 		public void Save()
 		{
-			_repository.SaveActivity();
+			_repository.SaveChanges();
 		}
 
 		private bool _isSaveEnabled;
@@ -144,6 +150,8 @@ namespace TimeTortoise.ViewModel
 
 		public void DeleteActivity()
 		{
+			if (StartedTimeSegment != null) StartStop();
+			SelectedActivity.Name = string.Empty;
 			var selectedActivity = SelectedActivity;
 			selectedActivity.ClearAllTimeSegments();
 			Activities.Remove(selectedActivity);
@@ -157,31 +165,39 @@ namespace TimeTortoise.ViewModel
 			private set => SetProperty(ref _startStopText, value);
 		}
 
-		private bool _isStarted;
-		private TimeSegment _currentTimeSegment;
-		private TimeSegmentViewModel _currentTimeSegmentViewModel;
+		public ActivityViewModel StartedActivity { get; private set; }
+		public TimeSegmentViewModel StartedTimeSegment { get; private set; }
+
+		private TimeSegment _startedTimeSegment;
 		public void StartStop()
 		{
 			if (!SelectedActivityIndexIsValid())
 				throw new InvalidOperationException("Can't start timing without first selecting an activity.");
 
-			_isStarted = !_isStarted;
-			StartStopText = _isStarted ? "Stop" : "Start";
-			if (_isStarted)
+			if (StartedActivity == null) StartedActivity = SelectedActivity;
+			else
 			{
-				_currentTimeSegment = new TimeSegment
+				SelectedActivity = StartedActivity;
+				StartedActivity = null;
+			}
+
+			StartStopText = StartedActivity == null ? "Start" : "Stop";
+			if (StartedActivity != null)
+			{
+				_startedTimeSegment = new TimeSegment
 				{
 					StartTime = new DateTime(_dateTime.Now.Ticks),
 					EndTime = new DateTime(_dateTime.Now.Ticks)
 				};
-				_currentTimeSegmentViewModel = new TimeSegmentViewModel(_currentTimeSegment, _validationMessageViewModel);
-				SelectedActivity.AddTimeSegment(_currentTimeSegment, _currentTimeSegmentViewModel);
+				StartedTimeSegment = new TimeSegmentViewModel(_startedTimeSegment, _validationMessageViewModel);
+				SelectedActivity.AddTimeSegment(_startedTimeSegment, StartedTimeSegment);
 			}
 			else
 			{
-				_currentTimeSegment.EndTime = new DateTime(_dateTime.Now.Ticks);
-				SelectedActivity.UpdateTimeSegment(_currentTimeSegmentViewModel);
-				_repository.SaveActivity();
+				_startedTimeSegment.EndTime = new DateTime(_dateTime.Now.Ticks);
+				SelectedActivity.UpdateTimeSegment(StartedTimeSegment);
+				_repository.SaveChanges();
+				StartedTimeSegment = null;
 			}
 		}
 

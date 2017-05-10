@@ -28,7 +28,7 @@ namespace TimeTortoise.DAL
 			_context.Add(activity);
 		}
 
-		public void SaveActivity()
+		public void SaveChanges()
 		{
 			_context.SaveChanges();
 		}
