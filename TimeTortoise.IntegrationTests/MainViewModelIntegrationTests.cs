@@ -282,6 +282,38 @@ namespace TimeTortoise.IntegrationTests
 		}
 
 		[Fact]
+		public void StartedTimeSegment_WhenDeleted_IsDeleted()
+		{
+			var connection = Helper.GetConnection();
+			try
+			{
+				using (var context = Helper.GetContext(connection))
+				{
+					// Arrange
+					var mockTime = new Mock<IDateTime>();
+					var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
+					mockTime.Setup(x => x.Now).Returns(startTime);
+					var mvm = new MainViewModel(new Repository(context), mockTime.Object, new ValidationMessageViewModel());
+
+					// Act
+					mvm.AddActivity();
+					mvm.StartStop();
+					mvm.SelectedTimeSegmentIndex = 0;
+					//Assert.Equal();
+					mvm.DeleteTimeSegment();
+
+					// Assert
+					//Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.Activities[0].ObservableTimeSegments[0].StartTime);
+					//Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.Activities[0].ObservableTimeSegments[0].EndTime);
+				}
+			}
+			finally
+			{
+				connection.Close();
+			}
+		}
+
+		[Fact]
 		public void TimeSegmentList_WhenStartTimeIsSpecified_ShowsCorrectTimeSegments()
 		{
 			var connection = Helper.GetConnection();

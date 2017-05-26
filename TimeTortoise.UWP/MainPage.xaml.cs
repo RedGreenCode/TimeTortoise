@@ -18,13 +18,18 @@ namespace TimeTortoise.UWP
 			_dispatcherTimer.Tick += dispatcherTimer_Tick;
 		}
 
+		private void ClearStartedText()
+		{
+			StartedActivity.Text = string.Empty;
+			StartedTimeSegmentStartTime.Text = string.Empty;
+			StartedTimeSegmentDuration.Text = string.Empty;
+		}
+
 		private void dispatcherTimer_Tick(object sender, object e)
 		{
 			if (Main.StartedActivity == null)
 			{
-				StartedActivity.Text = string.Empty;
-				StartedTimeSegmentStartTime.Text = string.Empty;
-				StartedTimeSegmentDuration.Text = string.Empty;
+				ClearStartedText();
 				return;
 			}
 			StartedActivity.Text = Main.StartedActivity.Name ?? string.Empty;
@@ -35,7 +40,11 @@ namespace TimeTortoise.UWP
 
 		private void StartStop()
 		{
-			if (Main.StartedTimeSegment != null) _dispatcherTimer.Stop();
+			if (Main.StartedTimeSegment != null)
+			{
+				_dispatcherTimer.Stop();
+				ClearStartedText();
+			}
 			else _dispatcherTimer.Start();
 			Main.StartStop();
 		}

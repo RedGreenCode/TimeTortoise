@@ -60,12 +60,14 @@
 				IsEnabled="{x:Bind Main.IsSaveEnabled, Mode=OneWay}"  
 				HorizontalAlignment="Left" Margin="517,251,0,0" VerticalAlignment="Top"/>
 		<TextBox Text="{x:Bind Main.SelectedTimeSegmentStartTime, Mode=TwoWay}"
-			HorizontalAlignment="Left" Margin="630,251,0,0" VerticalAlignment="Top" Width="230"/>
+				IsEnabled="{x:Bind Main.IsTimeSegmentDeleteEnabled, Mode=OneWay}"
+				HorizontalAlignment="Left" Margin="630,251,0,0" VerticalAlignment="Top" Width="230"/>
 		<TextBox Text="{x:Bind Main.SelectedTimeSegmentEndTime, Mode=TwoWay}"
-			HorizontalAlignment="Left" Margin="892,251,0,0" VerticalAlignment="Top" Width="230"/>
+				IsEnabled="{x:Bind Main.IsTimeSegmentDeleteEnabled, Mode=OneWay}"
+				HorizontalAlignment="Left" Margin="892,251,0,0" VerticalAlignment="Top" Width="230"/>
 		<TextBlock HorizontalAlignment="Left" Margin="631,366,0,0" TextWrapping="Wrap"
-				   Text="{x:Bind ValidationMessage.ValidationMessages, Mode=TwoWay}"
-				   VerticalAlignment="Top" Height="73" Width="630"/>
+				Text="{x:Bind ValidationMessage.ValidationMessages, Mode=TwoWay}"
+				VerticalAlignment="Top" Height="73" Width="630"/>
 		<Button Click="{x:Bind Main.AddTimeSegment}"
 				Content="Add"
 				IsEnabled="{x:Bind Main.IsTimeSegmentAddEnabled, Mode=OneWay}"  
@@ -75,8 +77,8 @@
 				IsEnabled="{x:Bind Main.IsTimeSegmentDeleteEnabled, Mode=OneWay}"  
 				HorizontalAlignment="Left" Margin="714,300,0,0" VerticalAlignment="Top"/>
 		<CalendarDatePicker 
-			Date="{x:Bind Main.DateRangeStart, Mode=TwoWay}"
-			HorizontalAlignment="Left" Margin="631,466,0,0" VerticalAlignment="Top"/>
+				Date="{x:Bind Main.DateRangeStart, Mode=TwoWay}"
+				HorizontalAlignment="Left" Margin="631,466,0,0" VerticalAlignment="Top"/>
 		<TextBlock Name="StartedActivity" HorizontalAlignment="Left" Margin="138,390,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"/>
 		<TextBlock Name="StartedTimeSegmentStartTime" HorizontalAlignment="Left" Margin="325,390,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166"/>
 		<TextBlock Name="StartedTimeSegmentDuration" HorizontalAlignment="Left" Margin="508,390,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60"/>

@@ -363,6 +363,39 @@ namespace TimeTortoise.ViewModel.Tests
 		}
 
 		[Fact]
+		public void TimingState_WhenStartedActivityIsDeleted_IsCorrect()
+		{
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			mvm.LoadActivities();
+
+			// Act
+			mvm.AddActivity();
+			mvm.StartStop();
+			mvm.DeleteActivity();
+
+			// Assert
+			Assert.Equal(null, mvm.StartedActivity);
+			Assert.Equal("Start", mvm.StartStopText);
+		}
+
+		[Fact]
+		public void TimingState_WhenStartedTimeSegmentIsDeleted_IsCorrect()
+		{
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			mvm.LoadActivities();
+
+			// Act
+			mvm.AddActivity();
+			mvm.StartStop();
+			mvm.SelectedTimeSegmentIndex = 0;
+			mvm.DeleteTimeSegment();
+
+			// Assert
+			Assert.Equal(null, mvm.StartedActivity);
+			Assert.Equal("Start", mvm.StartStopText);
+		}
+
+		[Fact]
 		public void TimeSegmentList_WhenTimeSegmentIsDeleted_IsUpdated()
 		{
 			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
@@ -375,6 +408,21 @@ namespace TimeTortoise.ViewModel.Tests
 
 			// Assert
 			Assert.Equal(3, mvm.SelectedActivity.NumObservableTimeSegments);
+		}
+
+		[Fact]
+		public void TimeSegmentList_AfterStartAddDelete_IsInCorrectState()
+		{
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+
+			// Act
+			mvm.AddActivity();
+			mvm.StartStop();
+			mvm.AddTimeSegment();
+			mvm.DeleteTimeSegment();
+
+			// Assert
+			Assert.Equal(1, mvm.SelectedActivity.NumObservableTimeSegments);
 		}
 
 		[Fact]

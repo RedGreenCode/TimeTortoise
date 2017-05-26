@@ -75,10 +75,27 @@ namespace TimeTortoise.ViewModel.Tests.ExceptionTests
 				SelectedTimeSegmentIndex = 0
 			};
 
-			// Act/Assert
+			// Act
 			var exception = Record.Exception(() => mvm.SelectedTimeSegmentIndex = mvm.SelectedActivity.NumTimeSegments);
+
+			// Assert
 			Assert.NotNull(exception);
 			Assert.IsType<IndexOutOfRangeException>(exception);
+		}
+
+		[Fact]
+		public void DeleteTimeSegment_WhenNoTimeSegmentIsSelected_Throws()
+		{
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			mvm.LoadActivities();
+
+			// Act
+			mvm.AddActivity();
+			var exception = Record.Exception(() => mvm.DeleteTimeSegment());
+
+			// Assert
+			Assert.NotNull(exception);
+			Assert.IsType<InvalidOperationException>(exception);
 		}
 	}
 }

@@ -29,6 +29,12 @@ namespace TimeTortoise.ViewModel
 			return _selectedActivityIndex >= 0 && _selectedActivityIndex < Activities.Count;
 		}
 
+		private bool SelectedTimeSegmentIndexIsValid()
+		{
+			return _selectedTimeSegmentIndex >= 0 && SelectedActivity != null &&
+				   _selectedTimeSegmentIndex < SelectedActivity.NumTimeSegments;
+		}
+
 		public ObservableCollection<ActivityViewModel> Activities { get; private set; } = new ObservableCollection<ActivityViewModel>();
 
 		private int _selectedActivityIndex = -1;
@@ -191,12 +197,13 @@ namespace TimeTortoise.ViewModel
 				};
 				StartedTimeSegment = new TimeSegmentViewModel(_startedTimeSegment, _validationMessageViewModel);
 				SelectedActivity.AddTimeSegment(_startedTimeSegment, StartedTimeSegment);
+				Save();
 			}
 			else
 			{
 				_startedTimeSegment.EndTime = new DateTime(_dateTime.Now.Ticks);
 				SelectedActivity.UpdateTimeSegment(StartedTimeSegment);
-				_repository.SaveChanges();
+				Save();
 				StartedTimeSegment = null;
 			}
 		}
@@ -242,7 +249,12 @@ namespace TimeTortoise.ViewModel
 		public TimeSegmentViewModel SelectedTimeSegment
 		{
 			get => _selectedTimeSegment;
-			private set => SetProperty(ref _selectedTimeSegment, value);
+			private set
+			{
+				SetProperty(ref _selectedTimeSegment, value);
+				RaisePropertyChanged("SelectedTimeSegmentStartTime");
+				RaisePropertyChanged("SelectedTimeSegmentEndTime");
+			}
 		}
 
 		public string SelectedTimeSegmentStartTime
@@ -269,8 +281,15 @@ namespace TimeTortoise.ViewModel
 
 		public void DeleteTimeSegment()
 		{
+			if (!SelectedTimeSegmentIndexIsValid())
+				throw new InvalidOperationException("No time segment is selected for deletion.");
+
 			var selectedTimeSegment = SelectedTimeSegment;
+			if (StartedTimeSegment != null && StartedTimeSegment == selectedTimeSegment) StartStop();
 			SelectedActivity.RemoveTimeSegment(_repository, selectedTimeSegment);
+			SelectedTimeSegment = null;
+			RaisePropertyChanged("SelectedTimeSegmentStartTime");
+			RaisePropertyChanged("SelectedTimeSegmentEndTime");
 		}
 
 		private DateTimeOffset? _dateRangeStart;
