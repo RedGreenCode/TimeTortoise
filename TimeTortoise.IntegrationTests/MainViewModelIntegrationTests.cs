@@ -297,14 +297,14 @@ namespace TimeTortoise.IntegrationTests
 
 					// Act
 					mvm.AddActivity();
+					Assert.Equal(0, mvm.SelectedActivity.NumTimeSegments);
 					mvm.StartStop();
 					mvm.SelectedTimeSegmentIndex = 0;
-					//Assert.Equal();
+					Assert.Equal(1, mvm.SelectedActivity.NumTimeSegments);
 					mvm.DeleteTimeSegment();
 
 					// Assert
-					//Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.Activities[0].ObservableTimeSegments[0].StartTime);
-					//Assert.Equal(startTime.ToString(CultureInfo.CurrentUICulture), mvm.Activities[0].ObservableTimeSegments[0].EndTime);
+					Assert.Equal(0, mvm.SelectedActivity.NumTimeSegments);
 				}
 			}
 			finally
