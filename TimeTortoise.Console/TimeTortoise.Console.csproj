@@ -10,8 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TimeTortoise.Client\TimeTortoise.Client.csproj" />
     <ProjectReference Include="..\TimeTortoise.DAL\TimeTortoise.DAL.csproj" />
     <ProjectReference Include="..\TimeTortoise.Model\TimeTortoise.Model.csproj" />
+    <ProjectReference Include="..\TimeTortoise.Server\TimeTortoise.Server.csproj" />
     <ProjectReference Include="..\TimeTortoise.TestHelper\TimeTortoise.TestHelper.csproj" />
     <ProjectReference Include="..\TimeTortoise.ViewModel\TimeTortoise.ViewModel.csproj" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Threading;
 
 using Moq;
 using TimeTortoise.TestHelper;
@@ -9,6 +10,7 @@ using TimeTortoise.TestHelper;
 using TimeTortoise.DAL;
 using TimeTortoise.Model;
 using TimeTortoise.ViewModel;
+using TimeTortoise.Client;
 
 namespace TimeTortoise.Console
 {
@@ -94,6 +96,22 @@ namespace TimeTortoise.Console
 			}
 		}
 
+		private void StartClient()
+		{
+			var client = new SignalRClient();
+			client.ConnectToServer();
+			while (true)
+			{
+				if (client.Messages.Count > 0)
+				{
+					var message = client.Messages.Dequeue();
+					System.Console.WriteLine(message);
+				}
+
+				Thread.Sleep(1000);
+			}
+		}
+
 		public static void Main(string[] args)
 		{
 			try
@@ -101,7 +119,8 @@ namespace TimeTortoise.Console
 				var p = new Program();
 				//p.PrintAddEvents();
 				//p.PrintDeleteEvents();
-				p.PrintTimeSegments();
+				//p.PrintTimeSegments();
+				p.StartClient();
 			}
 			catch (Exception e)
 			{
