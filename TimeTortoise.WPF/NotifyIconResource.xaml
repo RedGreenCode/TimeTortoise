@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:commands="clr-namespace:TimeTortoise.WPF.Commands">
+	<ContextMenu x:Shared="false"
+				 x:Key="TbMenu">
+		<MenuItem Header="Exit"
+				  Command="{commands:ExitCommand}">
+		</MenuItem>
+	</ContextMenu>
+</ResourceDictionary>
