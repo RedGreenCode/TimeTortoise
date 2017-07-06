@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using Microsoft.Owin.Hosting;
 using Owin;
 
@@ -16,7 +15,6 @@ namespace TimeTortoise.Server
 			using (WebApp.Start(url))
 			{
 				_messageHub = new MessageHub();
-				Console.WriteLine("Server is started");
 				Thread.Sleep(Timeout.Infinite);
 			}
 		}
