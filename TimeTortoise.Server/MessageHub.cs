@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using System;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 
 namespace TimeTortoise.Server
@@ -6,10 +7,10 @@ namespace TimeTortoise.Server
 	[HubName("MessageHub")]
 	public class MessageHub : Hub
 	{
-		public void SendMessage(string message)
+		public void SendMessage(DateTime lastUserActivityTime)
 		{
 			var hubContext = GlobalHost.ConnectionManager.GetHubContext<MessageHub>();
-			hubContext.Clients.All.ReceiveMessage(message);
+			hubContext.Clients.All.ReceiveMessage(lastUserActivityTime);
 		}
 	}
 }

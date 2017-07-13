@@ -27,7 +27,7 @@ namespace TimeTortoise.WPF
 
 		private void DispatcherTimer_Tick(object sender, object e)
 		{
-			_server.SendMessage(_idleTime.GetUserIdleTimeSeconds().ToString());
+			_server.SendMessage(_idleTime.LastUserActivityTime);
 		}
 
 		private void StartServer()

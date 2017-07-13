@@ -174,6 +174,46 @@ namespace TimeTortoise.ViewModel
 		public ActivityViewModel StartedActivity { get; private set; }
 		public TimeSegmentViewModel StartedTimeSegment { get; private set; }
 
+		public TimeSegmentViewModel IdleTimeSegment { get; private set; }
+
+		public void SetIdleTimeSegment(DateTime startTime, DateTime endTime)
+		{
+			var ts = new TimeSegment
+			{
+				StartTime = startTime,
+				EndTime = endTime,
+				ActivityId = SelectedActivityIndex
+			};
+			IdleTimeSegment = new TimeSegmentViewModel(ts, _validationMessageViewModel);
+		}
+
+		public void IncludeIdleTime()
+		{
+			IdleTimeSegment = null;
+			IsIncludeExcludeEnabled = false;
+		}
+
+		private bool _isIncludeExcludeEnabled;
+		public bool IsIncludeExcludeEnabled
+		{
+			get => _isIncludeExcludeEnabled;
+			set => SetProperty(ref _isIncludeExcludeEnabled, value);
+		}
+
+		public void ExcludeIdleTime()
+		{
+			// TODO: Refactor to avoid duplicating code from StartStop()
+			SelectedActivity = StartedActivity;
+			StartedActivity = null;
+			StartStopText = "Start";
+			_startedTimeSegment.EndTime = DateTime.Parse(IdleTimeSegment.StartTime);
+			SelectedActivity.UpdateTimeSegment(StartedTimeSegment);
+			Save();
+			StartedTimeSegment = null;
+			IdleTimeSegment = null;
+			IsIncludeExcludeEnabled = false;
+		}
+
 		private TimeSegment _startedTimeSegment;
 		public void StartStop()
 		{

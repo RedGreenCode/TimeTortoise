@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Microsoft.Owin.Hosting;
 using Owin;
 
@@ -19,9 +20,9 @@ namespace TimeTortoise.Server
 			}
 		}
 
-		public void SendMessage(string message)
+		public void SendMessage(DateTime lastUserActivityTime)
 		{
-			_messageHub.SendMessage(message);
+			_messageHub.SendMessage(lastUserActivityTime);
 		}
 	}
 

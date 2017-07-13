@@ -82,5 +82,16 @@
 		<TextBlock Name="StartedActivity" HorizontalAlignment="Left" Margin="138,390,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"/>
 		<TextBlock Name="StartedTimeSegmentStartTime" HorizontalAlignment="Left" Margin="325,390,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166"/>
 		<TextBlock Name="StartedTimeSegmentDuration" HorizontalAlignment="Left" Margin="508,390,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60"/>
+		<TextBlock Name="IdleTimeSegmentStartTime" HorizontalAlignment="Left" Margin="630,529,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166"/>
+		<TextBlock Name="IdleTimeSegmentEndTime" HorizontalAlignment="Left" Margin="830,529,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166"/>
+		<TextBlock Name="IdleTimeDuration" HorizontalAlignment="Left" Margin="1026,529,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60"/>
+		<Button Click="{x:Bind IncludeIdleTime}"
+				Content="Include"
+				IsEnabled="{x:Bind Main.IsIncludeExcludeEnabled, Mode=OneWay}"  
+				HorizontalAlignment="Left" Margin="630,568,0,0" VerticalAlignment="Top"/>
+		<Button Click="{x:Bind ExcludeIdleTime}"
+				Content="Exclude"
+				IsEnabled="{x:Bind Main.IsIncludeExcludeEnabled, Mode=OneWay}"  
+				HorizontalAlignment="Left" Margin="734,568,0,0" VerticalAlignment="Top"/>
 	</Grid>
 </Page>

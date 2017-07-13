@@ -25,7 +25,7 @@ namespace TimeTortoise.ConsoleClassic
 				while (true)
 				{
 					Thread.Sleep(1000);
-					server.SendMessage(DateTime.Now.ToString());
+					server.SendMessage(DateTime.Now);
 				}
 
 			}

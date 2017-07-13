@@ -15,18 +15,15 @@ namespace TimeTortoise.Server
 		public IdleTime()
 		{
 			Subscribe();
+			UpdateLastUserActivityTime();
 		}
 
 		private void UpdateLastUserActivityTime()
 		{
-			_lastUserActivity = DateTime.Now;
+			LastUserActivityTime = DateTime.Now;
 		}
 
-		public int GetUserIdleTimeSeconds()
-		{
-			var ts = DateTime.Now - _lastUserActivity;
-			return (int)ts.TotalSeconds;
-		}
+		public DateTime LastUserActivityTime { get; set; }
 
 		private void Subscribe()
 		{

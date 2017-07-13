@@ -681,5 +681,36 @@ namespace TimeTortoise.ViewModel.Tests
 			// Assert
 			Assert.Equal(null, mvm.SelectedTimeSegment);
 		}
+
+		[Fact]
+		public void IdleTimeSegment_WhenUserIsNotIdle_IsNull()
+		{
+			// Arrange
+			var mockTime = new Mock<IDateTime>();
+			var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
+			mockTime.Setup(x => x.Now).Returns(startTime);
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel()) { SelectedActivityIndex = 0 };
+
+			// Assert
+			Assert.Equal(null, mvm.IdleTimeSegment);
+		}
+
+		[Fact]
+		public void IdleTimer_WhenUserIsIdle_Starts()
+		{
+			// Arrange
+			const string idleStartTime = "3/1/2017 10:00:00 AM";
+			const string idleEndTime = "3/1/2017 10:15:00 AM";
+			var mockTime = new Mock<IDateTime>();
+			var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
+			mockTime.Setup(x => x.Now).Returns(startTime);
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel()) { SelectedActivityIndex = 0 };
+
+			// Act
+
+			// Assert
+			Assert.Equal(idleStartTime, mvm.IdleTimeSegment.StartTime);
+			Assert.Equal(idleEndTime, mvm.IdleTimeSegment.EndTime);
+		}
 	}
 }
