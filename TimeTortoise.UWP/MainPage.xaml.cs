@@ -9,8 +9,6 @@ namespace TimeTortoise.UWP
 {
 	public sealed partial class MainPage
 	{
-		private SignalRClient _client;
-
 		public MainPage()
 		{
 			InitializeComponent();
@@ -33,14 +31,7 @@ namespace TimeTortoise.UWP
 			if (Main.StartedActivity == null)
 			{
 				ClearStartedText();
-				_client = null;
 				return;
-			}
-
-			if (_client == null)
-			{
-				_client = new SignalRClient();
-				_client.ConnectToServer();
 			}
 
 			StartedActivity.Text = Main.StartedActivity.Name ?? string.Empty;
@@ -48,24 +39,12 @@ namespace TimeTortoise.UWP
 			StartedTimeSegmentStartTime.Text = Main.StartedTimeSegment.StartTime;
 			StartedTimeSegmentDuration.Text = Main.StartedTimeSegment.Duration;
 
-			if (_client.Messages.Count > 0)
+			if (Main.CheckIdleTime())
 			{
-				var lastUserActivityTime = _client.Messages.Dequeue();
-				var currentTime = DateTime.Now;
-				var duration = currentTime - lastUserActivityTime;
-				if (duration.TotalSeconds >= 10)
-				{
-					if (Main.IdleTimeSegment == null) Main.SetIdleTimeSegment(lastUserActivityTime, DateTime.Now);
-					else
-					{
-						Main.IdleTimeSegment.StartTime = lastUserActivityTime.ToString(CultureInfo.InvariantCulture);
-						Main.IdleTimeSegment.EndTime = DateTime.Now.ToString(CultureInfo.InvariantCulture);
-					}
-					IdleTimeSegmentStartTime.Text = Main.IdleTimeSegment.StartTime;
-					IdleTimeSegmentEndTime.Text = Main.IdleTimeSegment.EndTime;
-					IdleTimeDuration.Text = Main.IdleTimeSegment.Duration;
-					Main.IsIncludeExcludeEnabled = true;
-				}
+				IdleTimeSegmentStartTime.Text = Main.IdleTimeSegment.StartTime;
+				IdleTimeSegmentEndTime.Text = Main.IdleTimeSegment.EndTime;
+				IdleTimeDuration.Text = Main.IdleTimeSegment.Duration;
+				Main.IsIncludeExcludeEnabled = true;
 			}
 		}
 

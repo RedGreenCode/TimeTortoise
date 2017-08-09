@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Moq;
 
+using TimeTortoise.Client;
 using TimeTortoise.DAL;
 using TimeTortoise.Model;
 
@@ -82,6 +83,12 @@ namespace TimeTortoise.TestHelper
 				activity,
 				new Activity {Id = 2, Name = "Activity3"}
 			};
+		}
+
+		public static ISignalRClient GetMockSignalRClientObject()
+		{
+			var mockSignalRClient = new Mock<ISignalRClient>();
+			return mockSignalRClient.Object;
 		}
 	}
 }

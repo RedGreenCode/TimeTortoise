@@ -4,11 +4,10 @@ using Microsoft.AspNet.SignalR.Client;
 
 namespace TimeTortoise.Client
 {
-	public class SignalRClient
+	public class SignalRClient : ISignalRClient
 	{
 		private HubConnection _hubConnection;
 		private IHubProxy _hubProxy;
-		private IDisposable _receiveMessageHandler;
 
 		public Queue<DateTime> Messages { get; }
 
@@ -21,7 +20,7 @@ namespace TimeTortoise.Client
 		{
 			_hubConnection = new HubConnection("http://127.0.0.1:8080");
 			_hubProxy = _hubConnection.CreateHubProxy("MessageHub");	// must match hub name
-			_receiveMessageHandler = _hubProxy.On<DateTime>("ReceiveMessage", ReceiveMessage);
+			_hubProxy.On<DateTime>("ReceiveMessage", ReceiveMessage);
 			_hubConnection.Start();
 		}
 

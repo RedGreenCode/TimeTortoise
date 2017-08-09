@@ -20,7 +20,7 @@ namespace TimeTortoise.Console
 		{
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
 			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
 			{
 				System.Console.WriteLine($"Received event for property {e.PropertyName}");
@@ -33,7 +33,7 @@ namespace TimeTortoise.Console
 		{
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
 			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
 			{
 				System.Console.WriteLine($"Received property changed event for property {e.PropertyName}");
@@ -59,7 +59,7 @@ namespace TimeTortoise.Console
 			{
 				using (var context = Helper.GetContext(connection))
 				{
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel());
+					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
 					var activities = Helper.GetActivities();
 					foreach (var activity in activities)
 					{
@@ -76,7 +76,7 @@ namespace TimeTortoise.Console
 				}
 				using (var context = Helper.GetContext(connection))
 				{
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel());
+					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
 					mvm.LoadActivities();
 					var selectedActivityIndex = 0;
 					foreach (var activity in mvm.Activities)
@@ -112,6 +112,12 @@ namespace TimeTortoise.Console
 			}
 		}
 
+		private void GetContext()
+		{
+			var connection = Helper.GetConnection();
+			var context = Helper.GetContext(connection);
+		}
+
 		public static void Main(string[] args)
 		{
 			try
@@ -120,7 +126,7 @@ namespace TimeTortoise.Console
 				//p.PrintAddEvents();
 				//p.PrintDeleteEvents();
 				//p.PrintTimeSegments();
-				p.StartClient();
+				p.GetContext();
 			}
 			catch (Exception e)
 			{

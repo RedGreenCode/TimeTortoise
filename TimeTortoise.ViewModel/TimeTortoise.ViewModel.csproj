@@ -47,6 +47,10 @@
     <Compile Include="ValidationMessageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TimeTortoise.Client\TimeTortoise.Client.csproj">
+      <Project>{be40659a-c35b-4c00-9710-18a0a78ade0f}</Project>
+      <Name>TimeTortoise.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TimeTortoise.DAL\TimeTortoise.DAL.csproj">
       <Project>{2a56e5eb-fb2e-426d-9e3c-71be20568caf}</Project>
       <Name>TimeTortoise.DAL</Name>

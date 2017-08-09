@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using TimeTortoise.Client;
 using TimeTortoise.DAL;
 using TimeTortoise.Model;
 
@@ -10,17 +12,24 @@ namespace TimeTortoise.ViewModel
 		private readonly IRepository _repository;
 		private readonly IDateTime _dateTime;
 		private readonly ValidationMessageViewModel _validationMessageViewModel;
+		private readonly ISignalRClient _client;
 
-		public MainViewModel(string localPath, ValidationMessageViewModel validationMessageViewModel) : this(new Repository(new SqliteContext(localPath)), new SystemDateTime(), validationMessageViewModel)
+		public MainViewModel(string localPath, ValidationMessageViewModel validationMessageViewModel) :
+			this(new Repository(new SqliteContext(localPath)),
+			new SystemDateTime(), validationMessageViewModel,
+			new SignalRClient())
 		{
 		}
 
-		public MainViewModel(IRepository repository, IDateTime dateTime, ValidationMessageViewModel validationMessageViewModel)
+		public MainViewModel(IRepository repository, IDateTime dateTime,
+			ValidationMessageViewModel validationMessageViewModel, ISignalRClient signalRClient)
 		{
 			_repository = repository;
 			_dateTime = dateTime;
 			_validationMessageViewModel = validationMessageViewModel;
 			_selectedTimeSegment = null;
+			_client = signalRClient;
+			_client.ConnectToServer();
 			LoadActivities();
 		}
 
@@ -175,6 +184,29 @@ namespace TimeTortoise.ViewModel
 		public TimeSegmentViewModel StartedTimeSegment { get; private set; }
 
 		public TimeSegmentViewModel IdleTimeSegment { get; private set; }
+
+		public bool CheckIdleTime()
+		{
+			if (_client.Messages.Count > 0)
+			{
+				var lastUserActivityTime = _client.Messages.Dequeue();
+				var currentTime = DateTime.Now;
+				var duration = currentTime - lastUserActivityTime;
+				if (duration.TotalSeconds >= 10)
+				{
+					if (IdleTimeSegment == null) SetIdleTimeSegment(lastUserActivityTime, DateTime.Now);
+					else
+					{
+						IdleTimeSegment.StartTime = lastUserActivityTime.ToString(CultureInfo.InvariantCulture);
+						IdleTimeSegment.EndTime = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+					}
+				}
+
+				return true;
+			}
+
+			return false;
+		}
 
 		public void SetIdleTimeSegment(DateTime startTime, DateTime endTime)
 		{

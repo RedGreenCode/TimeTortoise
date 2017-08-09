@@ -3,6 +3,7 @@
 using Moq;
 using Xunit;
 
+using TimeTortoise.Client;
 using TimeTortoise.DAL;
 using TimeTortoise.TestHelper;
 using TimeTortoise.Model;
@@ -22,7 +23,7 @@ namespace TimeTortoise.ViewModel.Tests.ExceptionTests
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
 
 			// Act
 			// https://www.richard-banks.org/2015/07/stop-using-assertthrows-in-your-bdd.html
@@ -39,7 +40,7 @@ namespace TimeTortoise.ViewModel.Tests.ExceptionTests
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
 
 			// Act
 			var exception = Record.Exception(() => mvm.AddTimeSegment());
@@ -55,7 +56,7 @@ namespace TimeTortoise.ViewModel.Tests.ExceptionTests
 			// Arrange
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(Helper.GetActivities());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
 
 			// Act
 			var exception = Record.Exception(() => mvm.LoadTimeSegments());
@@ -69,7 +70,7 @@ namespace TimeTortoise.ViewModel.Tests.ExceptionTests
 		public void SetSelectedTimeSegmentIndex_WhenSelectedTimeSegmentIndexIsInvalid_Throws()
 		{
 			// Arrange
-			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel())
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject())
 			{
 				SelectedActivityIndex = 1,
 				SelectedTimeSegmentIndex = 0
@@ -86,7 +87,7 @@ namespace TimeTortoise.ViewModel.Tests.ExceptionTests
 		[Fact]
 		public void DeleteTimeSegment_WhenNoTimeSegmentIsSelected_Throws()
 		{
-			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel());
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
 			mvm.LoadActivities();
 
 			// Act
