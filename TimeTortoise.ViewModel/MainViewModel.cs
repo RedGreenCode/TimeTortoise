@@ -190,21 +190,23 @@ namespace TimeTortoise.ViewModel
 			if (_client.Messages.Count > 0)
 			{
 				var lastUserActivityTime = _client.Messages.Dequeue();
-				var currentTime = DateTime.Now;
+				var currentTime = _dateTime.Now;
 				var duration = currentTime - lastUserActivityTime;
 				if (duration.TotalSeconds >= 10)
 				{
-					if (IdleTimeSegment == null) SetIdleTimeSegment(lastUserActivityTime, DateTime.Now);
+					if (IdleTimeSegment == null) SetIdleTimeSegment(lastUserActivityTime, _dateTime.Now);
 					else
 					{
 						IdleTimeSegment.StartTime = lastUserActivityTime.ToString(CultureInfo.InvariantCulture);
-						IdleTimeSegment.EndTime = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+						IdleTimeSegment.EndTime = _dateTime.Now.ToString(CultureInfo.InvariantCulture);
 					}
 				}
 
+				IsIncludeExcludeEnabled = true;
 				return true;
 			}
 
+			IsIncludeExcludeEnabled = false;
 			return false;
 		}
 

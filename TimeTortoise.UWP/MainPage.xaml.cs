@@ -44,7 +44,6 @@ namespace TimeTortoise.UWP
 				IdleTimeSegmentStartTime.Text = Main.IdleTimeSegment.StartTime;
 				IdleTimeSegmentEndTime.Text = Main.IdleTimeSegment.EndTime;
 				IdleTimeDuration.Text = Main.IdleTimeSegment.Duration;
-				Main.IsIncludeExcludeEnabled = true;
 			}
 		}
 
