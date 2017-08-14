@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TimeTortoise.Client\TimeTortoise.Client.csproj">
-      <Project>{be40659a-c35b-4c00-9710-18a0a78ade0f}</Project>
+      <Project>{99ba18cf-df35-4119-878d-42661ae1a433}</Project>
       <Name>TimeTortoise.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\TimeTortoise.DAL\TimeTortoise.DAL.csproj">

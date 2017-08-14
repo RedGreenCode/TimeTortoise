@@ -192,7 +192,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TimeTortoise.Client\TimeTortoise.Client.csproj">
-      <Project>{933327bf-8ae6-4f3d-a13f-bb48c15a07a4}</Project>
+      <Project>{99ba18cf-df35-4119-878d-42661ae1a433}</Project>
       <Name>TimeTortoise.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\TimeTortoise.Model\TimeTortoise.Model.csproj">
