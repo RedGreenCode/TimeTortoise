@@ -104,7 +104,7 @@ namespace TimeTortoise.Console
 			{
 				if (client.Messages.Count > 0)
 				{
-					var message = client.Messages.Dequeue();
+					var message = client.GetNewestMessage();
 					System.Console.WriteLine(message);
 				}
 

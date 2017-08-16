@@ -9,11 +9,19 @@ namespace TimeTortoise.Client
 		private HubConnection _hubConnection;
 		private IHubProxy _hubProxy;
 
-		public Queue<DateTime> Messages { get; }
+		public Stack<DateTime> Messages { get; }
 
 		public SignalRClient()
 		{
-			Messages = new Queue<DateTime>();
+			Messages = new Stack<DateTime>();
+		}
+
+		public DateTime GetNewestMessage()
+		{
+			if (Messages.Count == 0) return DateTime.MinValue;
+			var message = Messages.Pop();
+			Messages.Clear();
+			return message;
 		}
 
 		public void ConnectToServer()
@@ -24,9 +32,9 @@ namespace TimeTortoise.Client
 			_hubConnection.Start();
 		}
 
-		private void ReceiveMessage(DateTime lastUserActivityTime)
+		public void ReceiveMessage(DateTime lastUserActivityTime)
 		{
-			Messages.Enqueue(lastUserActivityTime);
+			Messages.Push(lastUserActivityTime);
 		}
 	}
 }

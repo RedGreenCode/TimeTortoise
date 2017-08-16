@@ -705,9 +705,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mockTime = new Mock<IDateTime>();
 			mockTime.Setup(x => x.Now).Returns(DateTime.Parse(idleEndTime));
 			var mockSignalRClient = new Mock<ISignalRClient>();
-			var messages = new Queue<DateTime>();
-			messages.Enqueue(DateTime.Parse(idleStartTime));
-			mockSignalRClient.Setup(x => x.Messages).Returns(messages);
+			mockSignalRClient.Setup(x => x.GetNewestMessage()).Returns(DateTime.Parse(idleStartTime));
 
 			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel(), mockSignalRClient.Object) { SelectedActivityIndex = 0 };
 
@@ -723,7 +721,7 @@ namespace TimeTortoise.ViewModel.Tests
 		}
 
 		[Fact]
-		public void IdleTimer_WhenUserIsStillIdle_HasCorrecdtStartAndEndTimes()
+		public void IdleTimer_WhenUserIsStillIdle_HasCorrectStartAndEndTimes()
 		{
 			// Arrange
 			string idleStartTime = "3/1/2017 10:00:00 AM";
@@ -731,9 +729,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mockTime = new Mock<IDateTime>();
 			mockTime.Setup(x => x.Now).Returns(DateTime.Parse(idleEndTime));
 			var mockSignalRClient = new Mock<ISignalRClient>();
-			var messages = new Queue<DateTime>();
-			messages.Enqueue(DateTime.Parse(idleStartTime));
-			mockSignalRClient.Setup(x => x.Messages).Returns(messages);
+			mockSignalRClient.Setup(x => x.GetNewestMessage()).Returns(DateTime.Parse(idleStartTime));
 
 			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel(), mockSignalRClient.Object) { SelectedActivityIndex = 0 };
 
@@ -744,7 +740,7 @@ namespace TimeTortoise.ViewModel.Tests
 			idleStartTime = idleEndTime;
 			idleEndTime = "3/1/2017 10:30:00 AM";
 			mockTime.Setup(x => x.Now).Returns(DateTime.Parse(idleEndTime));
-			messages.Enqueue(DateTime.Parse(idleStartTime));
+			mockSignalRClient.Setup(x => x.GetNewestMessage()).Returns(DateTime.Parse(idleStartTime));
 			mvm.CheckIdleTime();
 
 			// Assert
@@ -755,15 +751,34 @@ namespace TimeTortoise.ViewModel.Tests
 		}
 
 		[Fact]
+		public void IdleTimer_WhenUserIdleTimeIsBelowThreshold_DoesNotStart()
+		{
+			// Arrange
+			const string idleStartTime = "3/1/2017 10:00:00 AM";
+			const string idleEndTime = "3/1/2017 10:00:01 AM";
+			var mockTime = new Mock<IDateTime>();
+			mockTime.Setup(x => x.Now).Returns(DateTime.Parse(idleEndTime));
+			var mockSignalRClient = new Mock<ISignalRClient>();
+			mockSignalRClient.Setup(x => x.GetNewestMessage()).Returns(DateTime.Parse(idleStartTime));
+
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel(), mockSignalRClient.Object) { SelectedActivityIndex = 0 };
+
+			// Act
+			mvm.StartStop();
+			var isUserIdle = mvm.CheckIdleTime();
+
+			// Assert
+			Assert.Equal(false, isUserIdle);
+			Assert.Equal(false, mvm.IsIncludeExcludeEnabled);
+		}
+
+		[Fact]
 		public void IdleTimer_WhenUserIsNotIdle_DoesNotStart()
 		{
 			// Arrange
 			var mockTime = new Mock<IDateTime>();
-			var mockSignalRClient = new Mock<ISignalRClient>();
-			var messages = new Queue<DateTime>();
-			mockSignalRClient.Setup(x => x.Messages).Returns(messages);
 
-			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel(), mockSignalRClient.Object) { SelectedActivityIndex = 0 };
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel(), new SignalRClient()) { SelectedActivityIndex = 0 };
 
 			// Act
 			mvm.StartStop();
@@ -784,9 +799,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mockTime = new Mock<IDateTime>();
 			mockTime.Setup(x => x.Now).Returns(DateTime.Parse(idleEndTime));
 			var mockSignalRClient = new Mock<ISignalRClient>();
-			var messages = new Queue<DateTime>();
-			messages.Enqueue(DateTime.Parse(idleStartTime));
-			mockSignalRClient.Setup(x => x.Messages).Returns(messages);
+			mockSignalRClient.Setup(x => x.GetNewestMessage()).Returns(DateTime.Parse(idleStartTime));
 
 			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel(), mockSignalRClient.Object) { SelectedActivityIndex = 0 };
 
@@ -809,9 +822,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mockTime = new Mock<IDateTime>();
 			mockTime.Setup(x => x.Now).Returns(DateTime.Parse(idleEndTime));
 			var mockSignalRClient = new Mock<ISignalRClient>();
-			var messages = new Queue<DateTime>();
-			messages.Enqueue(DateTime.Parse(idleStartTime));
-			mockSignalRClient.Setup(x => x.Messages).Returns(messages);
+			mockSignalRClient.Setup(x => x.GetNewestMessage()).Returns(DateTime.Parse(idleStartTime));
 
 			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel(), mockSignalRClient.Object) { SelectedActivityIndex = 0 };
 
@@ -825,6 +836,33 @@ namespace TimeTortoise.ViewModel.Tests
 			Assert.Equal(null, mvm.IdleTimeSegment);
 			Assert.Equal(false, mvm.IsIncludeExcludeEnabled);
 			Assert.Equal(idleStartTime, mvm.SelectedActivity.ObservableTimeSegments[0].EndTime);
+		}
+
+		[Fact]
+		public void IncludeExcludeButtons_WhenUserIsIdleAndThenNotIdle_AreEnabled()
+		{
+			// Arrange
+			const string idleStartTime = "3/1/2017 10:00:00 AM";
+			const string idleEndTime = "3/1/2017 10:15:00 AM";
+			var mockTime = new Mock<IDateTime>();
+			mockTime.Setup(x => x.Now).Returns(DateTime.Parse(idleEndTime));
+			var mockSignalRClient = new Mock<ISignalRClient>();
+			mockSignalRClient.Setup(x => x.GetNewestMessage()).Returns(DateTime.Parse(idleStartTime));
+
+			var mvm = new MainViewModel(Helper.GetMockRepositoryObject(), mockTime.Object, new ValidationMessageViewModel(), mockSignalRClient.Object) { SelectedActivityIndex = 0 };
+
+			// Act
+			mvm.StartStop();
+			Assert.Equal(false, mvm.IsIncludeExcludeEnabled);
+			var isIdle = mvm.CheckIdleTime();
+			Assert.Equal(true, isIdle);
+			Assert.Equal(true, mvm.IsIncludeExcludeEnabled);
+			mockSignalRClient.Setup(x => x.GetNewestMessage()).Returns(DateTime.Parse(idleEndTime));
+			isIdle = mvm.CheckIdleTime();
+			Assert.Equal(false, isIdle);
+
+			// Assert
+			Assert.Equal(true, mvm.IsIncludeExcludeEnabled);
 		}
 	}
 }

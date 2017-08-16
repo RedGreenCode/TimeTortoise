@@ -38,6 +38,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientTests.cs" />
     <Compile Include="ContextTests.cs" />
     <Compile Include="MainViewModelIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -187,9 +187,10 @@ namespace TimeTortoise.ViewModel
 
 		public bool CheckIdleTime()
 		{
-			if (_client.Messages.Count > 0)
+			bool isIdle = false;
+			var lastUserActivityTime = _client.GetNewestMessage();
+			if (lastUserActivityTime > DateTime.MinValue)
 			{
-				var lastUserActivityTime = _client.Messages.Dequeue();
 				var currentTime = _dateTime.Now;
 				var duration = currentTime - lastUserActivityTime;
 				if (duration.TotalSeconds >= 10)
@@ -200,14 +201,12 @@ namespace TimeTortoise.ViewModel
 						IdleTimeSegment.StartTime = lastUserActivityTime.ToString(CultureInfo.InvariantCulture);
 						IdleTimeSegment.EndTime = _dateTime.Now.ToString(CultureInfo.InvariantCulture);
 					}
+					isIdle = true;
 				}
-
-				IsIncludeExcludeEnabled = true;
-				return true;
 			}
 
-			IsIncludeExcludeEnabled = false;
-			return false;
+			IsIncludeExcludeEnabled = IdleTimeSegment != null;
+			return isIdle;
 		}
 
 		public void SetIdleTimeSegment(DateTime startTime, DateTime endTime)
