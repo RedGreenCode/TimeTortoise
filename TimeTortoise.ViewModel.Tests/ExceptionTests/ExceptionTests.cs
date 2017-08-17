@@ -3,7 +3,6 @@
 using Moq;
 using Xunit;
 
-using TimeTortoise.Client;
 using TimeTortoise.DAL;
 using TimeTortoise.TestHelper;
 using TimeTortoise.Model;

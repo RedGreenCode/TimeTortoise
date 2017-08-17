@@ -9,7 +9,6 @@
 		>
 	<Grid>
 		<tb:TaskbarIcon
-			x:Name ="Tb"
 			VerticalAlignment="Top"
 			IconSource="/Icons/Tortoise.ico"
 			ToolTipText="TimeTortoise"

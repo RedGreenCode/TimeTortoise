@@ -209,7 +209,7 @@ namespace TimeTortoise.ViewModel
 			return isIdle;
 		}
 
-		public void SetIdleTimeSegment(DateTime startTime, DateTime endTime)
+		private void SetIdleTimeSegment(DateTime startTime, DateTime endTime)
 		{
 			var ts = new TimeSegment
 			{
@@ -230,7 +230,7 @@ namespace TimeTortoise.ViewModel
 		public bool IsIncludeExcludeEnabled
 		{
 			get => _isIncludeExcludeEnabled;
-			set => SetProperty(ref _isIncludeExcludeEnabled, value);
+			private set => SetProperty(ref _isIncludeExcludeEnabled, value);
 		}
 
 		public void ExcludeIdleTime()

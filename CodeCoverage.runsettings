@@ -18,6 +18,8 @@
               <Exclude>
                 <Source>.*\\Migrations\\.*</Source>
                 <Source>.*\\ExceptionTests\\.*</Source>
+                <Source>.*\\TimeTortoise.Server.Tests\\.*</Source>
+                <Source>.*\\TimeTortoise.Server\\.*</Source>
               </Exclude>
             </Sources>
           </CodeCoverage>

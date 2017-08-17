@@ -10,7 +10,6 @@ namespace TimeTortoise.Server
 	public class IdleTime
 	{
 		private IKeyboardMouseEvents _keyboardMouseEvents;
-		private DateTime _lastUserActivity = DateTime.Now;
 
 		public IdleTime()
 		{
@@ -23,7 +22,7 @@ namespace TimeTortoise.Server
 			LastUserActivityTime = DateTime.Now;
 		}
 
-		public DateTime LastUserActivityTime { get; set; }
+		public DateTime LastUserActivityTime { get; private set; }
 
 		private void Subscribe()
 		{

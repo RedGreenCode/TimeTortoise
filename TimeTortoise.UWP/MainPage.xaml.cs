@@ -2,7 +2,6 @@
 using System.Globalization;
 using Windows.UI.Xaml;
 
-using TimeTortoise.Client;
 using TimeTortoise.ViewModel;
 
 namespace TimeTortoise.UWP

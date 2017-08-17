@@ -8,8 +8,9 @@ namespace TimeTortoise.Client
 	{
 		private HubConnection _hubConnection;
 		private IHubProxy _hubProxy;
+		private DateTime _lastConnectionCheckTime = DateTime.MinValue;
 
-		public Stack<DateTime> Messages { get; }
+		private Stack<DateTime> Messages { get; }
 
 		public SignalRClient()
 		{
@@ -18,6 +19,12 @@ namespace TimeTortoise.Client
 
 		public DateTime GetNewestMessage()
 		{
+			if (_hubConnection != null && _hubConnection.State != ConnectionState.Connected)
+			{
+				var ts = DateTime.Now - _lastConnectionCheckTime;
+				if (ts.TotalSeconds > 10) ConnectToServer();
+				_lastConnectionCheckTime = DateTime.Now;
+			}
 			if (Messages.Count == 0) return DateTime.MinValue;
 			var message = Messages.Pop();
 			Messages.Clear();

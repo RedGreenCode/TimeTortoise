@@ -102,9 +102,9 @@ namespace TimeTortoise.Console
 			client.ConnectToServer();
 			while (true)
 			{
-				if (client.Messages.Count > 0)
+				var message = client.GetNewestMessage();
+				if (message > DateTime.MinValue)
 				{
-					var message = client.GetNewestMessage();
 					System.Console.WriteLine(message);
 				}
 

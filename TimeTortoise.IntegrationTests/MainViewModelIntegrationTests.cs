@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using Moq;
 
-using TimeTortoise.Client;
 using TimeTortoise.DAL;
 using TimeTortoise.Model;
 using TimeTortoise.ViewModel;
