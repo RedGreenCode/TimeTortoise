@@ -54,6 +54,10 @@
       <Project>{5bca1bb8-9d17-4482-ae99-d1b5fb2c12be}</Project>
       <Name>TimeTortoise.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TimeTortoise.ViewModel\TimeTortoise.ViewModel.csproj">
+      <Project>{884c030c-28e2-47c4-bb4e-4e03eb09f2ef}</Project>
+      <Name>TimeTortoise.ViewModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

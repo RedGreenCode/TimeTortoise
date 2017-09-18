@@ -26,7 +26,7 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel(context);
 
 					// Act
 					var avm = mvm.SelectedActivity;
@@ -50,7 +50,7 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel(context);
 
 					// Act
 					mvm.LoadActivities();
@@ -87,7 +87,7 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel(context);
 
 					// Act
 					mvm.AddActivity();
@@ -113,7 +113,7 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel(context);
 					mvm.AddActivity();
 					mvm.Save();
 					mvm.LoadActivities();
@@ -148,7 +148,7 @@ namespace TimeTortoise.IntegrationTests
 				using (var context = Helper.GetContext(connection))
 				{
 					// Arrange
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel(context);
 					mvm.AddActivity();
 					mvm.SelectedActivityIndex = 0;
 					mvm.AddTimeSegment();
@@ -199,7 +199,7 @@ namespace TimeTortoise.IntegrationTests
 					var mockTime = new Mock<IDateTime>();
 					var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
 					mockTime.Setup(x => x.Now).Returns(startTime);
-					var mvm = new MainViewModel(new Repository(context), mockTime.Object, new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel(context, mockTime.Object);
 
 					// Act
 					mvm.AddActivity();
@@ -233,7 +233,7 @@ namespace TimeTortoise.IntegrationTests
 					var mockTime = new Mock<IDateTime>();
 					var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
 					mockTime.Setup(x => x.Now).Returns(startTime);
-					var mvm = new MainViewModel(new Repository(context), mockTime.Object, new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel(context, mockTime.Object);
 
 					// Act
 					mvm.AddActivity();
@@ -264,7 +264,7 @@ namespace TimeTortoise.IntegrationTests
 					var mockTime = new Mock<IDateTime>();
 					var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
 					mockTime.Setup(x => x.Now).Returns(startTime);
-					var mvm = new MainViewModel(new Repository(context), mockTime.Object, new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel(context, mockTime.Object);
 
 					// Act
 					mvm.AddActivity();
@@ -294,7 +294,7 @@ namespace TimeTortoise.IntegrationTests
 					var mockTime = new Mock<IDateTime>();
 					var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
 					mockTime.Setup(x => x.Now).Returns(startTime);
-					var mvm = new MainViewModel(new Repository(context), mockTime.Object, new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel(context, mockTime.Object);
 
 					// Act
 					mvm.AddActivity();
@@ -326,7 +326,7 @@ namespace TimeTortoise.IntegrationTests
 					var mockTime = new Mock<IDateTime>();
 					var startTime = new DateTime(2017, 3, 1, 10, 0, 0);
 					mockTime.Setup(x => x.Now).Returns(startTime);
-					var mvm = new MainViewModel(new Repository(context), mockTime.Object, new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel(context, mockTime.Object);
 
 					// Act
 					mvm.AddActivity();

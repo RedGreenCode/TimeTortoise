@@ -18,9 +18,7 @@ namespace TimeTortoise.Console
 	{
 		private void PrintAddEvents()
 		{
-			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+			var mvm = Helper.GetMainViewModel();
 			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
 			{
 				System.Console.WriteLine($"Received event for property {e.PropertyName}");
@@ -31,9 +29,7 @@ namespace TimeTortoise.Console
 
 		private void PrintDeleteEvents()
 		{
-			var mockRepository = new Mock<IRepository>();
-			mockRepository.Setup(x => x.LoadActivities()).Returns(new List<Activity>());
-			var mvm = new MainViewModel(mockRepository.Object, new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+			var mvm = Helper.GetMainViewModel();
 			mvm.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
 			{
 				System.Console.WriteLine($"Received property changed event for property {e.PropertyName}");
@@ -59,7 +55,7 @@ namespace TimeTortoise.Console
 			{
 				using (var context = Helper.GetContext(connection))
 				{
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel();
 					var activities = Helper.GetActivities();
 					foreach (var activity in activities)
 					{
@@ -76,7 +72,7 @@ namespace TimeTortoise.Console
 				}
 				using (var context = Helper.GetContext(connection))
 				{
-					var mvm = new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel(), Helper.GetMockSignalRClientObject());
+					var mvm = Helper.GetMainViewModel();
 					mvm.LoadActivities();
 					var selectedActivityIndex = 0;
 					foreach (var activity in mvm.Activities)

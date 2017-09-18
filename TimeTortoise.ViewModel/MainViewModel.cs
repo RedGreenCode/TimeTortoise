@@ -13,24 +13,28 @@ namespace TimeTortoise.ViewModel
 		private readonly IDateTime _dateTime;
 		private readonly ValidationMessageViewModel _validationMessageViewModel;
 		private readonly ISignalRClient _client;
+		private readonly ISettings _settings;
 
 		public MainViewModel(string localPath, ValidationMessageViewModel validationMessageViewModel) :
 			this(new Repository(new SqliteContext(localPath)),
 			new SystemDateTime(), validationMessageViewModel,
-			new SignalRClient())
+			new SignalRClient(), new SettingsUtility(localPath))
 		{
 		}
 
-		public MainViewModel(IRepository repository, IDateTime dateTime,
-			ValidationMessageViewModel validationMessageViewModel, ISignalRClient signalRClient)
+		public MainViewModel(IRepository repository, IDateTime dateTimeProvider,
+			ValidationMessageViewModel validationMessageViewModel, ISignalRClient signalRClient,
+			ISettingsUtility settingsUtility)
 		{
 			_repository = repository;
-			_dateTime = dateTime;
+			_dateTime = dateTimeProvider;
 			_validationMessageViewModel = validationMessageViewModel;
 			_selectedTimeSegment = null;
 			_client = signalRClient;
 			_client.ConnectToServer();
 			LoadActivities();
+			settingsUtility.ReadSettings();
+			_settings = settingsUtility.Settings;
 		}
 
 		private bool SelectedActivityIndexIsValid()
@@ -193,7 +197,7 @@ namespace TimeTortoise.ViewModel
 			{
 				var currentTime = _dateTime.Now;
 				var duration = currentTime - lastUserActivityTime;
-				if (duration.TotalSeconds >= 10)
+				if (duration.TotalSeconds >= _settings.IdleTimeoutSeconds)
 				{
 					if (IdleTimeSegment == null) SetIdleTimeSegment(lastUserActivityTime, _dateTime.Now);
 					else
@@ -322,7 +326,7 @@ namespace TimeTortoise.ViewModel
 		public TimeSegmentViewModel SelectedTimeSegment
 		{
 			get => _selectedTimeSegment;
-			private set
+			set
 			{
 				SetProperty(ref _selectedTimeSegment, value);
 				RaisePropertyChanged("SelectedTimeSegmentStartTime");

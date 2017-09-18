@@ -7,6 +7,7 @@ using Moq;
 
 using TimeTortoise.Client;
 using TimeTortoise.DAL;
+using TimeTortoise.ViewModel;
 using TimeTortoise.Model;
 
 namespace TimeTortoise.TestHelper
@@ -89,6 +90,72 @@ namespace TimeTortoise.TestHelper
 		{
 			var mockSignalRClient = new Mock<ISignalRClient>();
 			return mockSignalRClient.Object;
+		}
+
+		public static ISettingsUtility GetMockSettingsUtility()
+		{
+			var mockSettings = new Mock<ISettings>();
+			mockSettings.Setup(s => s.IdleTimeoutSeconds).Returns(10);
+
+			var mockSettingsUtility = new Mock<ISettingsUtility>();
+			mockSettingsUtility.Setup(s => s.Settings).Returns(mockSettings.Object);
+
+			return mockSettingsUtility.Object;
+		}
+
+		public static MainViewModel GetMainViewModel(Context context)
+		{
+			return new MainViewModel(new Repository(context), new SystemDateTime(), new ValidationMessageViewModel(), GetMockSignalRClientObject(), GetMockSettingsUtility());
+		}
+
+		public static MainViewModel GetMainViewModel(Context context, IDateTime dateTimeProvider)
+		{
+			return new MainViewModel(new Repository(context), dateTimeProvider, new ValidationMessageViewModel(), GetMockSignalRClientObject(), GetMockSettingsUtility());
+		}
+
+		public static MainViewModel GetMainViewModel(IRepository repository)
+		{
+			return new MainViewModel(repository, new SystemDateTime(), new ValidationMessageViewModel(), GetMockSignalRClientObject(), GetMockSettingsUtility());
+		}
+
+		public static MainViewModel GetMainViewModel(int selectedActivityIndex)
+		{
+			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel(),
+				GetMockSignalRClientObject(), GetMockSettingsUtility())
+			{
+				SelectedActivityIndex = selectedActivityIndex
+			};
+			return mvm;
+		}
+
+		public static MainViewModel GetMainViewModel(string selectedTimeSegmentStartTime)
+		{
+			var mvm = new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel(),
+				GetMockSignalRClientObject(), GetMockSettingsUtility())
+			{
+				SelectedTimeSegmentStartTime = selectedTimeSegmentStartTime
+			};
+			return mvm;
+		}
+
+		public static MainViewModel GetMainViewModel(out ValidationMessageViewModel vmvm)
+		{
+			vmvm = new ValidationMessageViewModel();
+			return new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), vmvm, GetMockSignalRClientObject(), GetMockSettingsUtility());
+		}
+
+		public static MainViewModel GetMainViewModel(int selectedActivityIndex, IDateTime dateTimeProvider, ISignalRClient mockSignalRClientObject)
+		{
+			var mvm = new MainViewModel(GetMockRepositoryObject(), dateTimeProvider, new ValidationMessageViewModel(), mockSignalRClientObject, GetMockSettingsUtility())
+			{
+				SelectedActivityIndex = selectedActivityIndex
+			};
+			return mvm;
+		}
+
+		public static MainViewModel GetMainViewModel()
+		{
+			return new MainViewModel(GetMockRepositoryObject(), new SystemDateTime(), new ValidationMessageViewModel(), GetMockSignalRClientObject(), GetMockSettingsUtility());
 		}
 	}
 }
