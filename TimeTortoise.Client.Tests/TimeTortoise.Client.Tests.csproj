@@ -5,10 +5,10 @@
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B2DD0536-D011-4AC8-B5A3-725C8BF140C2}</ProjectGuid>
+    <ProjectGuid>{2C8C69B4-DD04-48E0-AA32-9B6B02BB4A2D}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>TimeTortoise.IntegrationTests</RootNamespace>
-    <AssemblyName>TimeTortoise.IntegrationTests</AssemblyName>
+    <RootNamespace>TimeTortoise.Client.Tests</RootNamespace>
+    <AssemblyName>TimeTortoise.Client.Tests</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -39,40 +39,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientTests.cs" />
-    <Compile Include="ContextTests.cs" />
-    <Compile Include="MainViewModelIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingsIntegrationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TimeTortoise.Client\TimeTortoise.Client.csproj">
       <Project>{99ba18cf-df35-4119-878d-42661ae1a433}</Project>
       <Name>TimeTortoise.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TimeTortoise.DAL\TimeTortoise.DAL.csproj">
-      <Project>{2a56e5eb-fb2e-426d-9e3c-71be20568caf}</Project>
-      <Name>TimeTortoise.DAL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TimeTortoise.Model\TimeTortoise.Model.csproj">
-      <Project>{5bca1bb8-9d17-4482-ae99-d1b5fb2c12be}</Project>
-      <Name>TimeTortoise.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TimeTortoise.TestHelper\TimeTortoise.TestHelper.csproj">
-      <Project>{b99cdb77-793b-463d-be2d-d56f3014d20b}</Project>
-      <Name>TimeTortoise.TestHelper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TimeTortoise.ViewModel\TimeTortoise.ViewModel.csproj">
-      <Project>{884c030c-28e2-47c4-bb4e-4e03eb09f2ef}</Project>
-      <Name>TimeTortoise.ViewModel</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="settings.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

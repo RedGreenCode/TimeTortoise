@@ -69,7 +69,9 @@ namespace TimeTortoise.IntegrationTests
 		public void ActivitiesList_WithEmptyDatabaseOnDisk_IsEmpty()
 		{
 			// Arrange
-			var mvm = new MainViewModel(Path.GetTempPath(), new ValidationMessageViewModel());
+			var localPath = Path.GetTempPath();
+			var settingsUtility = new SettingsUtility(localPath);
+			var mvm = new MainViewModel(settingsUtility, localPath, new ValidationMessageViewModel());
 
 			// Act
 			mvm.LoadActivities();

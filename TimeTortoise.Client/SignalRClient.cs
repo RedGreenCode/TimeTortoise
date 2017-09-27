@@ -6,20 +6,25 @@ namespace TimeTortoise.Client
 {
 	public class SignalRClient : ISignalRClient
 	{
-		private HubConnection _hubConnection;
+		private readonly IHubConnection _hubConnection;
 		private IHubProxy _hubProxy;
 		private DateTime _lastConnectionCheckTime = DateTime.MinValue;
 
 		private Stack<DateTime> Messages { get; }
 
-		public SignalRClient()
+		public SignalRClient(string url) : this(new SignalRHubConnection(url))
+		{
+		}
+
+		public SignalRClient(IHubConnection hubConnection)
 		{
 			Messages = new Stack<DateTime>();
+			_hubConnection = hubConnection;
 		}
 
 		public DateTime GetNewestMessage()
 		{
-			if (_hubConnection != null && _hubConnection.State != ConnectionState.Connected)
+			if (_hubConnection.State != ConnectionState.Connected)
 			{
 				var ts = DateTime.Now - _lastConnectionCheckTime;
 				if (ts.TotalSeconds > 10) ConnectToServer();
@@ -33,7 +38,6 @@ namespace TimeTortoise.Client
 
 		public void ConnectToServer()
 		{
-			_hubConnection = new HubConnection("http://127.0.0.1:8080");
 			_hubProxy = _hubConnection.CreateHubProxy("MessageHub");	// must match hub name
 			_hubProxy.On<DateTime>("ReceiveMessage", ReceiveMessage);
 			_hubConnection.Start();

@@ -10,6 +10,7 @@ namespace TimeTortoise.Model
 		public SettingsUtility(string settingsPath)
 		{
 			_settingsFileName = string.Format($@"{settingsPath}\settings.txt");
+			ReadSettings();
 		}
 
 		public void ReadSettings()

@@ -1,0 +1,7 @@
+﻿# Time Tortoise settings file for integration tests
+
+# Number of seconds before a user is considered idle
+IdleTimeoutSeconds: 42
+
+# Address and port used to connect to a Time Tortoise Companion server
+ServerUrl: http://127.0.0.1:8888

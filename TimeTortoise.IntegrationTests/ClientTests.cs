@@ -11,7 +11,7 @@ namespace TimeTortoise.IntegrationTests
 		{
 			// Arrange
 			var lastUserActivityTime = new DateTime(2017, 3, 1, 10, 0, 0);
-			var client = new SignalRClient();
+			var client = new SignalRClient("http://example.com");
 
 			// Act
 			client.ReceiveMessage(lastUserActivityTime);

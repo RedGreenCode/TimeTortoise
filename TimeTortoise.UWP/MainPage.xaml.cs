@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Windows.UI.Xaml;
-
+using TimeTortoise.Model;
 using TimeTortoise.ViewModel;
 
 namespace TimeTortoise.UWP
@@ -12,7 +12,9 @@ namespace TimeTortoise.UWP
 		{
 			InitializeComponent();
 			ValidationMessage = new ValidationMessageViewModel();
-			Main = new MainViewModel(Windows.Storage.ApplicationData.Current.LocalFolder.Path, ValidationMessage);
+			var localPath = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+			var settingsUtility = new SettingsUtility(localPath);
+			Main = new MainViewModel(settingsUtility, localPath, ValidationMessage);
 
 			_dispatcherTimer = new DispatcherTimer {Interval = new TimeSpan(0, 0, 1)};
 			_dispatcherTimer.Tick += DispatcherTimer_Tick;

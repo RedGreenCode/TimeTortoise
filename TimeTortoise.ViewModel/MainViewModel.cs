@@ -15,10 +15,10 @@ namespace TimeTortoise.ViewModel
 		private readonly ISignalRClient _client;
 		private readonly ISettings _settings;
 
-		public MainViewModel(string localPath, ValidationMessageViewModel validationMessageViewModel) :
+		public MainViewModel(ISettingsUtility settingsUtility, string localPath, ValidationMessageViewModel validationMessageViewModel) :
 			this(new Repository(new SqliteContext(localPath)),
 			new SystemDateTime(), validationMessageViewModel,
-			new SignalRClient(), new SettingsUtility(localPath))
+			new SignalRClient(settingsUtility.Settings.ServerUrl), settingsUtility)
 		{
 		}
 
@@ -33,7 +33,6 @@ namespace TimeTortoise.ViewModel
 			_client = signalRClient;
 			_client.ConnectToServer();
 			LoadActivities();
-			settingsUtility.ReadSettings();
 			_settings = settingsUtility.Settings;
 		}
 

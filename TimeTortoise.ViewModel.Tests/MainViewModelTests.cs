@@ -664,6 +664,19 @@ namespace TimeTortoise.ViewModel.Tests
 		}
 
 		[Fact]
+		public void SelectedTimeSegmentEndTime_WhenNoTimeSegmentIsSelected_IsNotSet()
+		{
+			// Arrange
+			var mvm = Helper.GetMainViewModel(string.Empty);
+
+			// Act
+			mvm.SelectedTimeSegmentEndTime = "3/1/2017 10:00 AM";
+
+			// Assert
+			Assert.Equal(string.Empty, mvm.SelectedTimeSegmentEndTime);
+		}
+
+		[Fact]
 		public void IdleTimeSegment_WhenUserIsNotIdle_IsNull()
 		{
 			// Arrange
@@ -844,4 +857,3 @@ namespace TimeTortoise.ViewModel.Tests
 		}
 	}
 }
-
