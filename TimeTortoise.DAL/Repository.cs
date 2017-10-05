@@ -23,6 +23,11 @@ namespace TimeTortoise.DAL
 			return _context.TimeSegments.Where(t => t.ActivityId == activityId && t.StartTime >= startTime.Value && t.EndTime <= endTime.Value).ToList();
 		}
 
+		public List<TimeSegment> LoadAllTimeSegments(IDateTime startTime, IDateTime endTime)
+		{
+			return _context.TimeSegments.Where(t => t.StartTime >= startTime.Value && t.EndTime <= endTime.Value).ToList();
+		}
+
 		public void AddActivity(Activity activity)
 		{
 			_context.Add(activity);

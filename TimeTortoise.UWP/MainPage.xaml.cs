@@ -39,6 +39,7 @@ namespace TimeTortoise.UWP
 			Main.StartedTimeSegment.EndTime = DateTime.Now.ToString(CultureInfo.CurrentCulture);
 			StartedTimeSegmentStartTime.Text = Main.StartedTimeSegment.StartTime;
 			StartedTimeSegmentDuration.Text = Main.StartedTimeSegment.Duration;
+			Main.WriteDailySummary();
 
 			if (Main.CheckIdleTime())
 			{

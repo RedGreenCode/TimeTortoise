@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActivityViewModel.cs" />
+    <Compile Include="DailySummary.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="NotificationBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

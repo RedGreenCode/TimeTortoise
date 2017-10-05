@@ -10,5 +10,6 @@ namespace TimeTortoise.Model
 	{
 		void ReadSettings();
 		ISettings Settings { get; }
+		string SettingsPath { get; }
 	}
 }

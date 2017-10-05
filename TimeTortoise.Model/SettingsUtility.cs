@@ -10,6 +10,7 @@ namespace TimeTortoise.Model
 		public SettingsUtility(string settingsPath)
 		{
 			_settingsFileName = string.Format($@"{settingsPath}\settings.txt");
+			SettingsPath = settingsPath;
 			ReadSettings();
 		}
 
@@ -29,10 +30,15 @@ namespace TimeTortoise.Model
 
 		private void SetDefaultSettings()
 		{
-			Settings = new Settings();
-			Settings.IdleTimeoutSeconds = 300;
-			Settings.ServerUrl = "http://127.0.0.1:8080";
+			Settings = new Settings
+			{
+				IdleTimeoutSeconds = 300,
+				ServerUrl = "http://127.0.0.1:8080",
+				DailySummaryUpdateIntervalSeconds = 60
+			};
 		}
+
+		public string SettingsPath { get; private set; }
 
 		public ISettings Settings { get; private set; }
 	}

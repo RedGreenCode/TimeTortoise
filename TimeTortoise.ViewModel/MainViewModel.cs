@@ -14,6 +14,7 @@ namespace TimeTortoise.ViewModel
 		private readonly ValidationMessageViewModel _validationMessageViewModel;
 		private readonly ISignalRClient _client;
 		private readonly ISettings _settings;
+		private readonly DailySummary _dailySummary;
 
 		public MainViewModel(ISettingsUtility settingsUtility, string localPath, ValidationMessageViewModel validationMessageViewModel) :
 			this(new Repository(new SqliteContext(localPath)),
@@ -34,6 +35,7 @@ namespace TimeTortoise.ViewModel
 			_client.ConnectToServer();
 			LoadActivities();
 			_settings = settingsUtility.Settings;
+			_dailySummary = new DailySummary(settingsUtility, repository);
 		}
 
 		private bool SelectedActivityIndexIsValid()
@@ -274,6 +276,7 @@ namespace TimeTortoise.ViewModel
 				StartedTimeSegment = new TimeSegmentViewModel(_startedTimeSegment, _validationMessageViewModel);
 				SelectedActivity.AddTimeSegment(_startedTimeSegment, StartedTimeSegment);
 				Save();
+				WriteDailySummary();
 			}
 			else
 			{
@@ -281,7 +284,13 @@ namespace TimeTortoise.ViewModel
 				SelectedActivity.UpdateTimeSegment(StartedTimeSegment);
 				Save();
 				StartedTimeSegment = null;
+				WriteDailySummary();
 			}
+		}
+
+		public void WriteDailySummary()
+		{
+			_dailySummary.WriteFile();
 		}
 
 		private int _selectedTimeSegmentIndex = -1;

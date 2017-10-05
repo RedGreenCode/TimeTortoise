@@ -4,5 +4,6 @@
 	{
 		public int IdleTimeoutSeconds { get; set; }
 		public string ServerUrl { get; set; }
+		public int DailySummaryUpdateIntervalSeconds { get; set; }
 	}
 }
