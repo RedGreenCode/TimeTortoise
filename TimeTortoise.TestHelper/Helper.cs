@@ -38,6 +38,8 @@ namespace TimeTortoise.TestHelper
 			var mockRepository = new Mock<IRepository>();
 			mockRepository.Setup(x => x.LoadActivities()).Returns(GetActivities());
 			mockRepository.Setup(x => x.LoadTimeSegments(1, It.IsAny<IDateTime>(), It.IsAny<IDateTime>())).Returns(GetTimeSegments());
+			mockRepository.Setup(x => x.LoadAllTimeSegments(It.IsAny<IDateTime>(), It.IsAny<IDateTime>()))
+				.Returns(GetTimeSegments());
 			return mockRepository;
 		}
 

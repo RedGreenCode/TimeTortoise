@@ -32,7 +32,7 @@ namespace TimeTortoise.IntegrationTests
 					var avm = mvm.SelectedActivity;
 
 					// Assert
-					Assert.Equal(null, avm);
+					Assert.Null(avm);
 				}
 			}
 			finally
@@ -56,7 +56,7 @@ namespace TimeTortoise.IntegrationTests
 					mvm.LoadActivities();
 
 					// Assert
-					Assert.Equal(0, mvm.Activities.Count);
+					Assert.Empty(mvm.Activities);
 				}
 			}
 			finally
@@ -77,7 +77,7 @@ namespace TimeTortoise.IntegrationTests
 			mvm.LoadActivities();
 
 			// Assert
-			Assert.Equal(0, mvm.Activities.Count);
+			Assert.Empty(mvm.Activities);
 		}
 
 		[Fact]
@@ -97,7 +97,7 @@ namespace TimeTortoise.IntegrationTests
 					mvm.LoadActivities();
 
 					// Assert
-					Assert.Equal(1, mvm.Activities.Count);
+					Assert.Single(mvm.Activities);
 				}
 			}
 			finally
@@ -132,7 +132,7 @@ namespace TimeTortoise.IntegrationTests
 					mvm.LoadActivities();
 
 					// Assert
-					Assert.Equal(0, mvm.Activities.Count);
+					Assert.Empty(mvm.Activities);
 				}
 			}
 			finally
@@ -333,7 +333,7 @@ namespace TimeTortoise.IntegrationTests
 					// Act
 					mvm.AddActivity();
 					mvm.AddTimeSegment();
-					Assert.Equal(1, mvm.Activities[0].ObservableTimeSegments.Count);
+					Assert.Single(mvm.Activities[0].ObservableTimeSegments);
 					startTime = new DateTime(2017, 3, 2, 10, 0, 0);
 					mockTime.Setup(x => x.Now).Returns(startTime);
 					mvm.AddTimeSegment();
@@ -342,7 +342,7 @@ namespace TimeTortoise.IntegrationTests
 					// Assert
 					Assert.Equal(2, mvm.Activities[0].ObservableTimeSegments.Count);
 					mvm.DateRangeStart = new DateTime(2017, 3, 2, 10, 0, 0);
-					Assert.Equal(1, mvm.Activities[0].ObservableTimeSegments.Count);
+					Assert.Single(mvm.Activities[0].ObservableTimeSegments);
 				}
 			}
 			finally

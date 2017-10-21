@@ -95,7 +95,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var avm = mvm.SelectedActivity;
 
 			// Assert
-			Assert.Equal(null, avm);
+			Assert.Null(avm);
 		}
 
 		[Fact]
@@ -108,7 +108,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var tvm = mvm.SelectedTimeSegment;
 
 			// Assert
-			Assert.Equal(null, tvm);
+			Assert.Null(tvm);
 		}
 
 		[Fact]
@@ -119,14 +119,14 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.SelectedTimeSegmentIndex = 0;
 
 			var tvm = mvm.SelectedTimeSegment;
-			Assert.NotEqual(null, tvm);
+			Assert.NotNull(tvm);
 
 			// Act
 			mvm.SelectedTimeSegmentIndex = -1;
 			tvm = mvm.SelectedTimeSegment;
 
 			// Assert
-			Assert.Equal(null, tvm);
+			Assert.Null(tvm);
 		}
 
 		[Fact]
@@ -140,7 +140,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var tvm = mvm.SelectedTimeSegment;
 
 			// Assert
-			Assert.Equal(null, tvm);
+			Assert.Null(tvm);
 		}
 
 		[Fact]
@@ -224,11 +224,11 @@ namespace TimeTortoise.ViewModel.Tests
 			var mvm = Helper.GetMainViewModel();
 
 			// Act
-			Assert.Equal(false, mvm.IsSaveEnabled);
+			Assert.False(mvm.IsSaveEnabled);
 			mvm.AddActivity();
 
 			// Assert
-			Assert.Equal(true, mvm.IsSaveEnabled);
+			Assert.True(mvm.IsSaveEnabled);
 		}
 
 		[Fact]
@@ -236,13 +236,13 @@ namespace TimeTortoise.ViewModel.Tests
 		{
 			// Arrange
 			var mvm = Helper.GetMainViewModel(0);
-			Assert.Equal(false, mvm.IsTimeSegmentDeleteEnabled);
+			Assert.False(mvm.IsTimeSegmentDeleteEnabled);
 
 			// Act
 			mvm.AddTimeSegment();
 
 			// Assert
-			Assert.Equal(true, mvm.IsTimeSegmentDeleteEnabled);
+			Assert.True(mvm.IsTimeSegmentDeleteEnabled);
 		}
 
 		[Fact]
@@ -252,11 +252,11 @@ namespace TimeTortoise.ViewModel.Tests
 			var mvm = Helper.GetMainViewModel();
 
 			// Act
-			Assert.Equal(false, mvm.IsTimeSegmentAddEnabled);
+			Assert.False(mvm.IsTimeSegmentAddEnabled);
 			mvm.SelectedActivityIndex = 0;
 
 			// Assert
-			Assert.Equal(true, mvm.IsTimeSegmentAddEnabled);
+			Assert.True(mvm.IsTimeSegmentAddEnabled);
 		}
 
 		[Fact]
@@ -267,8 +267,8 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.SelectedTimeSegmentIndex = 3;
 
 			// Assert
-			Assert.Equal(true, mvm.IsSaveEnabled);
-			Assert.Equal(true, mvm.IsTimeSegmentDeleteEnabled);
+			Assert.True(mvm.IsSaveEnabled);
+			Assert.True(mvm.IsTimeSegmentDeleteEnabled);
 		}
 
 		[Fact]
@@ -278,7 +278,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mvm = Helper.GetMainViewModel();
 
 			// Assert
-			Assert.Equal(false, mvm.IsSaveEnabled);
+			Assert.False(mvm.IsSaveEnabled);
 		}
 
 		[Fact]
@@ -288,7 +288,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mvm = Helper.GetMainViewModel();
 
 			// Assert
-			Assert.Equal(false, mvm.IsSaveEnabled);
+			Assert.False(mvm.IsSaveEnabled);
 		}
 
 		[Fact]
@@ -298,7 +298,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mvm = Helper.GetMainViewModel(-1);
 
 			// Assert
-			Assert.Equal(false, mvm.IsSaveEnabled);
+			Assert.False(mvm.IsSaveEnabled);
 		}
 
 		[Fact]
@@ -309,7 +309,7 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.SelectedTimeSegmentIndex = -1;
 
 			// Assert
-			Assert.Equal(false, mvm.IsSaveEnabled);
+			Assert.False(mvm.IsSaveEnabled);
 		}
 
 		[Fact]
@@ -319,7 +319,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mvm = Helper.GetMainViewModel(99);
 
 			// Assert
-			Assert.Equal(false, mvm.IsSaveEnabled);
+			Assert.False(mvm.IsSaveEnabled);
 		}
 
 		[Fact]
@@ -363,7 +363,7 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.DeleteActivity();
 
 			// Assert
-			Assert.Equal(null, mvm.StartedActivity);
+			Assert.Null(mvm.StartedActivity);
 			Assert.Equal("Start", mvm.StartStopText);
 		}
 
@@ -380,7 +380,7 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.DeleteTimeSegment();
 
 			// Assert
-			Assert.Equal(null, mvm.StartedActivity);
+			Assert.Null(mvm.StartedActivity);
 			Assert.Equal("Start", mvm.StartStopText);
 		}
 
@@ -649,7 +649,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mvm = Helper.GetMainViewModel(string.Empty);
 
 			// Assert
-			Assert.Equal(null, mvm.SelectedTimeSegment);
+			Assert.Null(mvm.SelectedTimeSegment);
 		}
 
 
@@ -660,7 +660,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mvm = Helper.GetMainViewModel(string.Empty);
 
 			// Assert
-			Assert.Equal(null, mvm.SelectedTimeSegment);
+			Assert.Null(mvm.SelectedTimeSegment);
 		}
 
 		[Fact]
@@ -686,7 +686,7 @@ namespace TimeTortoise.ViewModel.Tests
 			var mvm = Helper.GetMainViewModel(0);
 
 			// Assert
-			Assert.Equal(null, mvm.IdleTimeSegment);
+			Assert.Null(mvm.IdleTimeSegment);
 		}
 
 		[Fact]
@@ -707,10 +707,10 @@ namespace TimeTortoise.ViewModel.Tests
 			var isUserIdle = mvm.CheckIdleTime();
 
 			// Assert
-			Assert.Equal(true, isUserIdle);
+			Assert.True(isUserIdle);
 			Assert.Equal(idleStartTime, mvm.IdleTimeSegment.StartTime);
 			Assert.Equal(idleEndTime, mvm.IdleTimeSegment.EndTime);
-			Assert.Equal(true, mvm.IsIncludeExcludeEnabled);
+			Assert.True(mvm.IsIncludeExcludeEnabled);
 		}
 
 		[Fact]
@@ -737,10 +737,10 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.CheckIdleTime();
 
 			// Assert
-			Assert.Equal(true, isUserIdle);
+			Assert.True(isUserIdle);
 			Assert.Equal(idleStartTime, mvm.IdleTimeSegment.StartTime);
 			Assert.Equal(idleEndTime, mvm.IdleTimeSegment.EndTime);
-			Assert.Equal(true, mvm.IsIncludeExcludeEnabled);
+			Assert.True(mvm.IsIncludeExcludeEnabled);
 		}
 
 		[Fact]
@@ -761,8 +761,8 @@ namespace TimeTortoise.ViewModel.Tests
 			var isUserIdle = mvm.CheckIdleTime();
 
 			// Assert
-			Assert.Equal(false, isUserIdle);
-			Assert.Equal(false, mvm.IsIncludeExcludeEnabled);
+			Assert.False(isUserIdle);
+			Assert.False(mvm.IsIncludeExcludeEnabled);
 		}
 
 		[Fact]
@@ -776,9 +776,9 @@ namespace TimeTortoise.ViewModel.Tests
 			var isUserIdle = mvm.CheckIdleTime();
 
 			// Assert
-			Assert.Equal(false, isUserIdle);
-			Assert.Equal(null, mvm.IdleTimeSegment);
-			Assert.Equal(false, mvm.IsIncludeExcludeEnabled);
+			Assert.False(isUserIdle);
+			Assert.Null(mvm.IdleTimeSegment);
+			Assert.False(mvm.IsIncludeExcludeEnabled);
 		}
 
 		[Fact]
@@ -800,8 +800,8 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.IncludeIdleTime();
 
 			// Assert
-			Assert.Equal(null, mvm.IdleTimeSegment);
-			Assert.Equal(false, mvm.IsIncludeExcludeEnabled);
+			Assert.Null(mvm.IdleTimeSegment);
+			Assert.False(mvm.IsIncludeExcludeEnabled);
 			Assert.Equal(idleEndTime, mvm.SelectedActivity.ObservableTimeSegments[0].EndTime);
 		}
 
@@ -823,9 +823,9 @@ namespace TimeTortoise.ViewModel.Tests
 			mvm.ExcludeIdleTime();
 
 			// Assert
-			Assert.Equal(null, mvm.StartedActivity);
-			Assert.Equal(null, mvm.IdleTimeSegment);
-			Assert.Equal(false, mvm.IsIncludeExcludeEnabled);
+			Assert.Null(mvm.StartedActivity);
+			Assert.Null(mvm.IdleTimeSegment);
+			Assert.False(mvm.IsIncludeExcludeEnabled);
 			Assert.Equal(idleStartTime, mvm.SelectedActivity.ObservableTimeSegments[0].EndTime);
 		}
 
@@ -844,16 +844,16 @@ namespace TimeTortoise.ViewModel.Tests
 
 			// Act
 			mvm.StartStop();
-			Assert.Equal(false, mvm.IsIncludeExcludeEnabled);
+			Assert.False(mvm.IsIncludeExcludeEnabled);
 			var isIdle = mvm.CheckIdleTime();
-			Assert.Equal(true, isIdle);
-			Assert.Equal(true, mvm.IsIncludeExcludeEnabled);
+			Assert.True(isIdle);
+			Assert.True(mvm.IsIncludeExcludeEnabled);
 			mockSignalRClient.Setup(x => x.GetNewestMessage()).Returns(DateTime.Parse(idleEndTime));
 			isIdle = mvm.CheckIdleTime();
-			Assert.Equal(false, isIdle);
+			Assert.False(isIdle);
 
 			// Assert
-			Assert.Equal(true, mvm.IsIncludeExcludeEnabled);
+			Assert.True(mvm.IsIncludeExcludeEnabled);
 		}
 	}
 }
